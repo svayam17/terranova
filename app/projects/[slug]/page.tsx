@@ -1,13 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { projects } from "@/lib/content";
 
+const legacyProjectSlugs: Record<string, string> = {
+  "the-house-of-grain": "paradise-developers"
+};
+
 export function generateStaticParams() {
-  return projects.map((project) => ({
-    slug: project.slug
-  }));
+  return [
+    ...projects.map((project) => ({
+      slug: project.slug
+    })),
+    ...Object.keys(legacyProjectSlugs).map((slug) => ({ slug }))
+  ];
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
@@ -24,6 +31,12 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
 }
 
 export default function ProjectPage({ params }: { params: { slug: string } }) {
+  const legacySlug = legacyProjectSlugs[params.slug];
+
+  if (legacySlug) {
+    redirect(`/projects/${legacySlug}`);
+  }
+
   const project = projects.find((item) => item.slug === params.slug);
 
   if (!project) {

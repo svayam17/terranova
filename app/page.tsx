@@ -49,6 +49,9 @@ export default function Home() {
             </a>
           </div>
           <div className="hidden items-center gap-10 text-[11px] uppercase tracking-[0.22em] text-ivory/78 md:flex">
+            <Link className="transition-colors hover:text-ivory" href="/about">
+              About
+            </Link>
             <a className="transition-colors hover:text-ivory" href="#studio">
               Studio
             </a>
@@ -63,6 +66,7 @@ export default function Home() {
             </a>
           </div>
           <div className="flex items-center justify-between gap-5 text-[10px] uppercase tracking-[0.2em] text-ivory/70 md:hidden">
+            <Link href="/about">About</Link>
             <a href="#studio">Studio</a>
             <a href="#collections">Products</a>
             <a href="#projects">Projects</a>
@@ -173,7 +177,7 @@ export default function Home() {
         </motion.div>
 
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
-          {collections.map((collection) => (
+          {collections.slice(0, 5).map((collection) => (
             <motion.div
               key={collection.name}
               {...fadeUp}
@@ -196,10 +200,9 @@ export default function Home() {
                     <p className="mb-3 text-[10px] uppercase tracking-[0.26em] text-sand">
                       Collection
                     </p>
-                    <h5 className="font-serif text-4xl font-medium text-ivory md:text-3x1">
+                    <h3 className="font-serif text-4xl font-medium text-ivory md:text-5xl">
                       {collection.name}
-                    </h5>
-                    
+                    </h3>
                   </div>
                   <ArrowUpRight className="text-ivory/70 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </div>
@@ -207,6 +210,15 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
+        <motion.div {...fadeUp} className="mt-10 flex justify-center">
+          <Link
+            href="/products"
+            className="group relative isolate inline-flex items-center gap-3 overflow-hidden border border-charcoal px-7 py-4 text-[11px] uppercase tracking-[0.22em] transition-all duration-700 ease-luxury before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:bg-charcoal before:transition-transform before:duration-700 before:ease-luxury hover:-translate-y-0.5 hover:text-ivory hover:before:scale-x-100"
+          >
+            View All Collections
+            <ArrowUpRight size={15} className="transition-transform duration-700 ease-luxury group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </Link>
+        </motion.div>
       </section>
 
       <section id="projects" className="px-5 py-16 md:px-12 md:py-28 lg:px-16">
@@ -219,7 +231,7 @@ export default function Home() {
           </h2>
         </motion.div>
         <div className="columns-1 gap-7 md:columns-2 xl:columns-3">
-          {projects.map((project, index) => (
+          {projects.slice(0, 6).map((project, index) => (
             <motion.div
               key={project.name}
               {...fadeUp}
@@ -241,21 +253,24 @@ export default function Home() {
                     className="object-cover transition-transform duration-[1800ms] ease-luxury group-hover:scale-105"
                   />
                 </div>
-                 <div className="mt-6 border-t border-charcoal/12 pt-5">
-                  <div>
-                    <h3 className="font-serif text-3xl font-medium md:text-4xl">{project.name}</h3>
-                    <p className="mt-2 text-sm uppercase tracking-[0.18em] text-stone">
-                      {project.location} / {project.year}
-                    </p>
-                  </div>
-                  <p className="mt-4 max-w-xs text-sm leading-6 text-charcoal/60">
-                    {project.productUsed}
-                  </p>
+                <div className="mt-6 border-t border-charcoal/12 pt-5">
+                  <h3 className="font-serif text-3xl font-medium md:text-4xl">
+                    {project.name}
+                  </h3>
                 </div>
               </Link>
             </motion.div>
           ))}
         </div>
+        <motion.div {...fadeUp} className="mt-10 flex justify-center">
+          <Link
+            href="/projects"
+            className="group relative isolate inline-flex items-center gap-3 overflow-hidden border border-charcoal px-7 py-4 text-[11px] uppercase tracking-[0.22em] transition-all duration-700 ease-luxury before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:bg-charcoal before:transition-transform before:duration-700 before:ease-luxury hover:-translate-y-0.5 hover:text-ivory hover:before:scale-x-100"
+          >
+            View All Projects
+            <ArrowUpRight size={15} className="transition-transform duration-700 ease-luxury group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </Link>
+        </motion.div>
       </section>
 
       <section className="relative overflow-hidden bg-charcoal px-5 py-16 text-ivory md:px-12 md:py-28 lg:px-16">
