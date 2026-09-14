@@ -49,7 +49,7 @@ export const collections = [
       "Thermo Wood Deck Flooring"
     ],
     image:
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=1800&q=85"
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=85"
   },
   {
     slug: "cladding",
@@ -172,7 +172,7 @@ export const projects = [
     description:
       "WPC decking supplied for Taj Convention Goa.",
     image:
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=1800&q=88"
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=88"
   },
 
   {
@@ -295,3 +295,101 @@ export const projects = [
 
 export type Collection = (typeof collections)[number];
 export type Project = (typeof projects)[number];
+
+// Optional detailed metadata for sub-collections (images and short specs).
+// Populate with exact terminology and specs from product PDFs when available.
+export const subcollectionDetails: Record<string, { image: string; spec?: string }> = {
+  // Wood Flooring
+  "Laminate Flooring": {
+    image: collections.find((c) => c.slug === "wood-flooring")?.image || heroImage,
+    spec: "Project-grade laminate with durable wear layer — see product PDF for full specifications."
+  },
+  "Engineering Wood Flooring": {
+    image: collections.find((c) => c.slug === "wood-flooring")?.image || heroImage,
+    spec: "Multi-layer engineered timber with stable core construction and refined surface finishes."
+  },
+  "Curved Engineering Wood Flooring": {
+    image: collections.find((c) => c.slug === "wood-flooring")?.image || heroImage,
+    spec: "Engineered timber designed for curved installations and radiused layouts."
+  },
+  "Solid Wood Flooring": {
+    image: collections.find((c) => c.slug === "wood-flooring")?.image || heroImage,
+    spec: "Full-thickness solid timber planks in selected species and finishes."
+  },
+
+  // Vinyl & resilient
+  "Vinyl Flooring": {
+    image: collections.find((c) => c.slug === "vinyl-flooring")?.image || heroImage,
+    spec: "Resilient vinyl surfaces with commercial wear ratings and low maintenance properties."
+  },
+  "LVT Flooring": {
+    image: collections.find((c) => c.slug === "vinyl-flooring")?.image || heroImage,
+    spec: "Luxury Vinyl Tile — high-fidelity visuals with strong dimensional stability."
+  },
+  "SPC Flooring": {
+    image: collections.find((c) => c.slug === "vinyl-flooring")?.image || heroImage,
+    spec: "Stone plastic composite (SPC) core for enhanced rigidity and waterproof performance."
+  },
+
+  // Outdoor
+  "WPC Deck Flooring": {
+    image: collections.find((c) => c.slug === "outdoor-flooring")?.image || heroImage,
+    spec: "WPC decking combining polymer and wood fibres for low maintenance outdoor use."
+  },
+  "Solid Wood Deck Flooring": {
+    image: collections.find((c) => c.slug === "outdoor-flooring")?.image || heroImage,
+    spec: "Thermally treated solid timber decking with enhanced weather resistance."
+  },
+  "Thermo Wood Deck Flooring": {
+    image: collections.find((c) => c.slug === "outdoor-flooring")?.image || heroImage,
+    spec: "Thermo-treated timber with improved dimensional stability and decay resistance."
+  },
+
+  // Cladding
+  "WPC Cladding": {
+    image: collections.find((c) => c.slug === "cladding")?.image || heroImage,
+    spec: "Composite cladding for durable, low-maintenance facades and interiors."
+  },
+  "Solid Wood Cladding": {
+    image: collections.find((c) => c.slug === "cladding")?.image || heroImage,
+    spec: "Solid timber cladding in selected species and profiles."
+  },
+  "Thermo Wood Cladding": {
+    image: collections.find((c) => c.slug === "cladding")?.image || heroImage,
+    spec: "Thermally modified wood for improved outdoor performance."
+  },
+
+  // Carpet
+  "Wall to Wall Carpets": {
+    image: collections.find((c) => c.slug === "carpet")?.image || heroImage,
+    spec: "Bespoke wall-to-wall carpet solutions for hospitality and residential projects."
+  },
+  "Carpet Tiles": {
+    image: collections.find((c) => c.slug === "carpet")?.image || heroImage,
+    spec: "Modular carpet tiles for flexible layouts and acoustic performance."
+  },
+  "Area Rugs": {
+    image: collections.find((c) => c.slug === "carpet")?.image || heroImage,
+    spec: "Hand-finished area rugs in curated fibres and palettes."
+  },
+
+  // Mosaics & stones (examples)
+  "Imported Marbles": {
+    image: collections.find((c) => c.slug === "marbles-and-stones")?.image || heroImage,
+    spec: "High-grade imported marbles selected for veining, finish and honed/polished options."
+  },
+  "Stone Basins": {
+    image: collections.find((c) => c.slug === "marbles-and-stones")?.image || heroImage,
+    spec: "Solid-stone basins and bespoke carved elements."
+  },
+
+  // Window coverings
+  "Roller Blinds": {
+    image: collections.find((c) => c.slug === "window-blinds")?.image || heroImage,
+    spec: "Minimal roller shading systems with a curated textile palette."
+  },
+  "Venetian Blinds": {
+    image: collections.find((c) => c.slug === "window-blinds")?.image || heroImage,
+    spec: "Precision venetian systems in timber and aluminum finishes."
+  }
+};

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { projects } from "@/lib/content";
+import Header from "@/components/Header";
 
 const legacyProjectSlugs: Record<string, string> = {
   "the-house-of-grain": "paradise-developers"
@@ -55,18 +56,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,17,17,0.78),rgba(17,17,17,0.18)_58%,rgba(17,17,17,0.5)),linear-gradient(180deg,rgba(17,17,17,0.08),rgba(17,17,17,0.8))]" />
-        <nav className="relative z-10 flex items-center justify-between px-5 py-6 md:px-12 lg:px-16">
-          <Link href="/" className="font-serif text-2xl tracking-[0.08em] md:text-3xl">
-            Terra Nova
-          </Link>
-          <Link
-            href="/#projects"
-            className="inline-flex items-center gap-3 text-[10px] uppercase tracking-[0.22em] text-ivory/76 transition-colors hover:text-ivory"
-          >
-            <ArrowLeft size={15} />
-            Projects
-          </Link>
-        </nav>
+        <Header variant="dark" />
         <div className="relative z-10 flex min-h-[calc(88vh-88px)] items-end px-5 pb-10 md:px-12 md:pb-16 lg:px-16">
           <div className="max-w-6xl">
             <p className="mb-5 text-[10px] uppercase tracking-[0.28em] text-sand">
@@ -127,10 +117,10 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             </h2>
           </div>
           <Link
-            href="/#contact"
+            href="/contact-us"
             className="inline-flex w-fit items-center gap-3 border border-ivory/70 px-6 py-4 text-[11px] uppercase tracking-[0.22em] transition-colors hover:bg-ivory hover:text-charcoal"
           >
-            Contact Studio
+            Contact Us
             <ArrowUpRight size={15} />
           </Link>
         </div>

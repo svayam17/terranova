@@ -3,8 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Globe2, Send } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { collections, heroImage, projects } from "@/lib/content";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const fadeUp = {
   initial: { opacity: 0, y: 42 },
@@ -14,9 +16,10 @@ const fadeUp = {
 };
 
 export default function Home() {
+  const shouldReduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 900], [0, 180]);
-  const heroScale = useTransform(scrollY, [0, 900], [1.05, 1.18]);
+  const heroY = useTransform(scrollY, [0, 900], [0, shouldReduceMotion ? 0 : 72]);
+  const heroScale = useTransform(scrollY, [0, 900], [1.04, shouldReduceMotion ? 1.04 : 1.09]);
 
   return (
     <main className="overflow-hidden bg-ivory text-charcoal">
@@ -36,42 +39,7 @@ export default function Home() {
         </motion.div>
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,17,17,0.76),rgba(17,17,17,0.22)_48%,rgba(17,17,17,0.52)),linear-gradient(180deg,rgba(17,17,17,0.15),rgba(17,17,17,0.76))]" />
 
-        <nav className="relative z-10 flex flex-col gap-5 px-5 py-6 md:flex-row md:items-center md:justify-between md:px-12 lg:px-16">
-          <div className="flex items-center justify-between gap-6">
-            <a href="#" className="font-serif text-2xl font-medium tracking-[0.08em] md:text-3xl">
-              Terra Nova
-            </a>
-            <a
-              className="text-[10px] uppercase tracking-[0.22em] text-ivory/70 md:hidden"
-              href="#contact"
-            >
-              Contact
-            </a>
-          </div>
-          <div className="hidden items-center gap-10 text-[11px] uppercase tracking-[0.22em] text-ivory/78 md:flex">
-            <Link className="transition-colors hover:text-ivory" href="/about">
-              About
-            </Link>
-            <a className="transition-colors hover:text-ivory" href="#studio">
-              Studio
-            </a>
-            <a className="transition-colors hover:text-ivory" href="#collections">
-              Materials
-            </a>
-            <a className="transition-colors hover:text-ivory" href="#projects">
-              Projects
-            </a>
-            <a className="transition-colors hover:text-ivory" href="#contact">
-              Contact
-            </a>
-          </div>
-          <div className="flex items-center justify-between gap-5 text-[10px] uppercase tracking-[0.2em] text-ivory/70 md:hidden">
-            <Link href="/about">About</Link>
-            <a href="#studio">Studio</a>
-            <a href="#collections">Products</a>
-            <a href="#projects">Projects</a>
-          </div>
-        </nav>
+        <Header variant="dark" />
 
         <div className="relative z-10 flex min-h-[calc(100vh-88px)] items-end px-5 pb-10 md:px-12 md:pb-16 lg:px-16">
           <motion.div
@@ -84,30 +52,29 @@ export default function Home() {
               Global luxury sourcing and materials studio
             </p>
             <h1 className="max-w-5xl font-serif text-[clamp(3.15rem,8.4vw,9.6rem)] font-medium leading-[0.86] tracking-normal">
-              Global Craftsmanship.
-              <span className="block">Curated for Timeless Spaces.</span>
+              25+ Years of Global Sourcing.
+              <span className="block">Now, Built Around Your Project.</span>
             </h1>
             <div className="mt-9 flex max-w-3xl flex-col gap-7 md:flex-row md:items-end md:justify-between">
               <p className="max-w-xl text-base leading-8 text-ivory/78 md:text-lg">
-                Premium wood flooring, decking, cladding, and bespoke sourcing
-                solutions for hospitality, real estate, and luxury developments.
+                For more than 25 years, we have been buying, sourcing and importing finishing materials for projects across India and overseas.
               </p>
               <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
-                <a className="group inline-flex items-center justify-between gap-3 border border-ivory/80 px-5 py-4 text-[11px] uppercase tracking-[0.2em] transition-all duration-500 ease-luxury hover:bg-ivory hover:text-charcoal md:px-6" href="#collections">
-                  Explore Collections
+                <Link className="group inline-flex items-center justify-between gap-3 border border-ivory/80 px-5 py-4 text-[11px] uppercase tracking-[0.2em] transition-all duration-500 ease-luxury hover:bg-ivory hover:text-charcoal md:px-6" href="/contact-us">
+                  Discuss Your Project
                   <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
-                <a className="group inline-flex items-center justify-between gap-3 border border-ivory/25 px-5 py-4 text-[11px] uppercase tracking-[0.2em] text-ivory/82 transition-all duration-500 ease-luxury hover:border-ivory hover:text-ivory md:px-6" href="#projects">
+                </Link>
+                <Link className="group inline-flex items-center justify-between gap-3 border border-ivory/25 px-5 py-4 text-[11px] uppercase tracking-[0.2em] text-ivory/82 transition-all duration-500 ease-luxury hover:border-ivory hover:text-ivory md:px-6" href="/projects">
                   View Projects
                   <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>
         </div>
       </section>
 
-      <section className="px-5 py-16 md:px-12 md:py-28 lg:px-16">
+      <section className="px-5 py-16 md:px-12 md:py-24 lg:px-16">
         <motion.div {...fadeUp} className="mx-auto max-w-5xl text-center">
           <p className="mb-8 text-[11px] uppercase tracking-[0.28em] text-bronze">
             Material intelligence
@@ -118,9 +85,9 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section id="studio" className="px-5 pb-16 md:px-12 md:pb-28 lg:px-16">
-        <div className="grid gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-          <motion.div {...fadeUp} className="relative min-h-[390px] overflow-hidden md:min-h-[620px]">
+      <section id="studio" className="px-5 pb-16 md:px-12 md:pb-24 lg:px-16">
+        <div className="grid gap-8 lg:grid-cols-[0.94fr_1.06fr] lg:items-center">
+          <motion.div {...fadeUp} className="relative min-h-[360px] overflow-hidden md:min-h-[480px]">
             <Image
               src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1500&q=88"
               alt="Luxury interior architectural detail"
@@ -129,51 +96,71 @@ export default function Home() {
               className="object-cover transition-transform duration-[1800ms] ease-luxury hover:scale-105"
             />
           </motion.div>
-          <motion.div {...fadeUp} className="lg:pl-16">
+          <motion.div {...fadeUp} className="lg:pl-10">
             <p className="mb-7 text-[11px] uppercase tracking-[0.28em] text-bronze">
               About Terra Nova
             </p>
             <h2 className="max-w-3xl font-serif text-[clamp(3rem,5vw,6.8rem)] font-medium leading-[0.92] tracking-normal">
-              A quiet studio for exceptional material decisions.
+              We don&apos;t sell what we have. We source what the project needs.
             </h2>
-            <p className="mt-8 max-w-xl text-base leading-8 text-charcoal/64">
-              Terra Nova evolves the GS Woods legacy into a quieter, more
-              architectural studio for premium wood floors, exterior decking,
-              cladding, and custom material programs across residential,
-              hospitality, commercial, co-working, and distribution projects.
+            <p className="mt-7 max-w-xl text-base leading-8 text-charcoal/64">
+              TerraNova Finishing Materials is a dedicated platform for strategic project sourcing and procurement. We begin with the project requirement and work backwards to identify the appropriate product, manufacturing partner, country of origin and procurement route.
             </p>
-            <div className="mt-10 grid grid-cols-2 gap-px bg-charcoal/12 md:grid-cols-4">
-              {["20+ Years Trade", "13+ Countries", "2016 Incorporated", "Project Solutions"].map(
-                (stat) => (
-                  <div key={stat} className="bg-ivory p-6">
-                    <p className="font-serif text-3xl leading-none text-charcoal">
-                      {stat.split(" ")[0]}
-                    </p>
-                    <p className="mt-4 text-[11px] uppercase leading-5 tracking-[0.18em] text-stone">
-                      {stat.replace(`${stat.split(" ")[0]} `, "")}
-                    </p>
-                  </div>
-                )
-              )}
+
+            <div className="tn-timeline mt-9 grid border-y border-charcoal/12 py-6 sm:grid-cols-3 sm:gap-0">
+              {[
+                ["01", "GS Stones", "Bringing international products to Indian projects."],
+                ["02", "GS Woods", "Sourcing and developing products around specific project requirements."],
+                ["03", "TerraNova", "Making project procurement our business."]
+              ].map(([number, title, copy], index) => (
+                <motion.div
+                  key={title}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-10%" }}
+                  transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                  className="tn-timeline-item relative py-4 sm:px-5 sm:py-0 first:sm:pl-0 last:sm:pr-0"
+                >
+                  <span className="mb-5 block text-[10px] tracking-[0.2em] text-stone">{number}</span>
+                  <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bronze">{title}</h4>
+                  <p className="mt-2 max-w-[15rem] text-sm leading-6 text-charcoal/68">{copy}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-5">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bronze">Start with one requirement. Grow with the project.</p>
+              <Link href="/about-us" className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-charcoal transition-colors hover:text-bronze">Explore About Us <ArrowUpRight size={14} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" /></Link>
             </div>
           </motion.div>
         </div>
       </section>
 
       <section id="collections" className="bg-sand/38 px-5 py-16 md:px-12 md:py-28 lg:px-16">
-        <motion.div {...fadeUp} className="mb-10 flex flex-col justify-between gap-8 md:flex-row md:items-end">
-          <div>
-            <p className="mb-6 text-[11px] uppercase tracking-[0.28em] text-bronze">
-              Material collections
-            </p>
-            <h2 className="max-w-4xl font-serif text-[clamp(3.4rem,6vw,7.4rem)] font-medium leading-[0.9] tracking-normal">
-              Surfaces selected for atmosphere.
-            </h2>
-          </div>
-          <p className="max-w-sm text-sm leading-7 text-charcoal/60">
-            A restrained library drawn from GS Woods expertise in flooring,
-            decking, cladding, curved outdoor systems, and project-grade surfaces.
+        <motion.div {...fadeUp} className="mb-10">
+          <p className="mb-6 text-[11px] uppercase tracking-[0.28em] text-bronze">
+            Our sourcing network
           </p>
+          <h2 className="max-w-4xl font-serif text-[clamp(3.4rem,6vw,7.4rem)] font-medium leading-[0.9] tracking-normal">
+            Multi-Product. Multi-Factory. Multi-Country.
+          </h2>
+          <p className="mt-6 max-w-3xl text-base leading-8 text-charcoal/60">
+            Our sourcing network enables us to evaluate manufacturing partners and sourcing markets based on the requirements of each project. The objective is not simply to find a supplier. It is to build the right procurement solution for the project.
+          </p>
+          <div className="mt-10 grid gap-8 border-t border-charcoal/12 pt-8 sm:grid-cols-3">
+            <div className="tn-network-item group">
+              <h4 className="text-[11px] uppercase tracking-[0.22em] text-bronze font-semibold">Multiple Products</h4>
+              <p className="mt-3 text-sm leading-6 text-charcoal/64">Flooring, carpets, decking and selected architectural and finishing materials.</p>
+            </div>
+            <div className="tn-network-item group">
+              <h4 className="text-[11px] uppercase tracking-[0.22em] text-bronze font-semibold">Multiple Factories</h4>
+              <p className="mt-3 text-sm leading-6 text-charcoal/64">Specialised manufacturing partners selected according to product, specification, quantity and quality requirements.</p>
+            </div>
+            <div className="tn-network-item group">
+              <h4 className="text-[11px] uppercase tracking-[0.22em] text-bronze font-semibold">Multiple Countries</h4>
+              <p className="mt-3 text-sm leading-6 text-charcoal/64">Sourcing experience across 12+ countries, including China, Indonesia, Vietnam, Malaysia, Thailand and selected European markets.</p>
+            </div>
+          </div>
         </motion.div>
 
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
@@ -227,24 +214,21 @@ export default function Home() {
             Featured projects
           </p>
           <h2 className="font-serif text-[clamp(3.4rem,7vw,8rem)] font-medium leading-[0.9] tracking-normal">
-            Immersive spaces, resolved through material restraint.
+            Some of Our Projects
           </h2>
+          <p className="mt-6 max-w-2xl text-base leading-8 text-charcoal/60">
+            Featured work across Grand Hyatt Goa, Taj Convention Goa, Cheval Blanc Maldives, Piramal Realty Mumbai, Hiranandani, Kalpataru, Awfis (Multiple Locations), and many more projects over 25+ years.
+          </p>
         </motion.div>
-        <div className="columns-1 gap-7 md:columns-2 xl:columns-3">
-          {projects.slice(0, 6).map((project, index) => (
+        <div className="grid items-start gap-x-7 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
+          {projects.slice(0, 6).map((project) => (
             <motion.div
               key={project.name}
               {...fadeUp}
-              className="group mb-10 break-inside-avoid text-left"
+              className="group text-left"
             >
               <Link href={`/projects/${project.slug}`} className="block">
-                <div className={`relative overflow-hidden bg-sand ${
-                  index % 4 === 0
-                    ? "h-[460px] md:h-[640px]"
-                    : index % 4 === 1
-                      ? "h-[380px] md:h-[500px]"
-                      : "h-[420px] md:h-[560px]"
-                }`}>
+                <div className="relative h-[420px] overflow-hidden bg-sand md:h-[520px]">
                   <Image
                     src={project.image}
                     alt={`${project.name} architectural project`}
@@ -253,10 +237,11 @@ export default function Home() {
                     className="object-cover transition-transform duration-[1800ms] ease-luxury group-hover:scale-105"
                   />
                 </div>
-                <div className="mt-6 border-t border-charcoal/12 pt-5">
-                  <h3 className="font-serif text-3xl font-medium md:text-4xl">
+                <div className="mt-5 flex items-start justify-between gap-4 border-t border-charcoal/12 pt-5">
+                  <h3 className="font-serif text-3xl font-medium transition-transform duration-500 ease-luxury group-hover:translate-x-1 md:text-4xl">
                     {project.name}
                   </h3>
+                  <ArrowUpRight size={18} className="mt-1 shrink-0 text-bronze opacity-0 transition-all duration-500 ease-luxury group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:opacity-100" />
                 </div>
               </Link>
             </motion.div>
@@ -279,17 +264,29 @@ export default function Home() {
           <motion.div {...fadeUp}>
             <p className="mb-7 flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-sand">
               <Globe2 size={16} />
-              Global sourcing
+              Global Sourcing
             </p>
             <h2 className="font-serif text-[clamp(3.2rem,5.8vw,7.2rem)] font-medium leading-[0.9] tracking-normal">
-              Built on 20+ years of international trade across 13+ countries.
+              Built Around Three Project Priorities
             </h2>
             <p className="mt-8 max-w-md text-base leading-8 text-ivory/62">
-              Terra Nova carries forward the GS Woods sourcing network with a more
-              curated lens: dependable supply, OEM collaboration, responsible timber
-              selection, and precise material systems for architects and project
-              clients.
+              Every project has different stakeholders and different objectives. Our role is to bring these priorities together through strategic sourcing.
             </p>
+
+            <div className="mt-10 space-y-3">
+              <div className="tn-priority group py-3">
+                <h4 className="text-[11px] uppercase tracking-[0.22em] text-sand font-semibold">Design Intent</h4>
+                <p className="mt-2 text-sm leading-6 text-ivory/62">Understanding and preserving the design vision of the architect and designer.</p>
+              </div>
+              <div className="tn-priority group border-t border-ivory/10 pt-4">
+                <h4 className="text-[11px] uppercase tracking-[0.22em] text-sand font-semibold">Technical Requirements</h4>
+                <p className="mt-2 text-sm leading-6 text-ivory/62">Meeting specified technical parameters, quality standards and performance requirements of the project team and PMC.</p>
+              </div>
+              <div className="tn-priority group border-t border-ivory/10 pt-4">
+                <h4 className="text-[11px] uppercase tracking-[0.22em] text-sand font-semibold">Project Economics</h4>
+                <p className="mt-2 text-sm leading-6 text-ivory/62">Working towards the commercial objectives of the project, including CapEx optimisation and overall project viability.</p>
+              </div>
+            </div>
           </motion.div>
           <motion.div {...fadeUp} className="relative min-h-[460px]">
             <svg viewBox="0 0 900 520" className="h-full min-h-[460px] w-full">
@@ -319,13 +316,37 @@ export default function Home() {
 
       <section className="px-5 py-16 md:px-12 md:py-28 lg:px-16">
         <motion.div {...fadeUp} className="mx-auto max-w-6xl">
-          <p className="mb-9 text-[11px] uppercase tracking-[0.28em] text-bronze">
-            Material philosophy
+          <p className="mb-6 text-[11px] uppercase tracking-[0.28em] text-bronze">
+            Procurement Scope
           </p>
-          <blockquote className="font-serif text-[clamp(3.4rem,7vw,8.2rem)] font-medium leading-[0.9] tracking-normal">
-            Luxury is found where performance, timber character, timeless detailing,
-            and intelligent craftsmanship resolve into one quiet surface.
-          </blockquote>
+          <h2 className="font-serif text-[clamp(3rem,6vw,7.2rem)] font-medium leading-[0.9] tracking-normal mb-8">
+            From Source to Project
+          </h2>
+          <p className="max-w-2xl text-base leading-8 text-charcoal/70 mb-12">
+            Our involvement can extend across the complete procurement journey. The scope depends on the requirement. You may need us for one stage or the complete journey.
+          </p>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-charcoal/10 pt-8 sm:grid-cols-4 lg:grid-cols-8">
+            {[
+              { step: "01", name: "Sourcing" },
+              { step: "02", name: "OEM & Custom Manufacturing" },
+              { step: "03", name: "Production" },
+              { step: "04", name: "Quality Control" },
+              { step: "05", name: "International Procurement" },
+              { step: "06", name: "Import & Logistics" },
+              { step: "07", name: "Project Supply" },
+              { step: "08", name: "Installation & Execution" }
+            ].map((item, index) => (
+              <div key={item.name} className="tn-process-item group relative py-3">
+                <p className="font-serif text-lg text-bronze leading-none mb-3">{item.step}</p>
+                <h4 className="text-[11px] uppercase tracking-[0.16em] leading-normal font-semibold text-charcoal">
+                  {item.name}
+                </h4>
+                {index < 7 && (
+                  <span className="hidden lg:block absolute right-2 top-0 text-charcoal/20 font-light">→</span>
+                )}
+              </div>
+            ))}
+          </div>
         </motion.div>
       </section>
 
@@ -336,27 +357,26 @@ export default function Home() {
               Contact
             </p>
             <h2 className="font-serif text-[clamp(3.4rem,6vw,7.2rem)] font-medium leading-[0.9] tracking-normal">
-              Discuss Your Project
+              Let&apos;s Start With Your Requirement
             </h2>
-            <p className="mt-8 max-w-md text-base leading-8 text-charcoal/62">
-              Share the location, flooring or decking intent, and development context.
-              The studio will respond with a considered next step.
+            <p className="mt-7 max-w-md text-base leading-8 text-charcoal/62">
+              Start with a product requirement, specification, BOQ, drawing, reference or simply a project need.
             </p>
           </motion.div>
-          <motion.form {...fadeUp} className="grid gap-6">
+          <motion.form {...fadeUp} className="grid gap-5">
             {["Name", "Email", "Project Location"].map((label) => (
               <label key={label} className="block">
                 <span className="text-[10px] uppercase tracking-[0.24em] text-stone">
                   {label}
                 </span>
-                <input className="mt-3 w-full border-0 border-b border-charcoal/22 bg-transparent px-0 py-4 text-lg outline-none transition-colors focus:border-bronze" />
+                <input className="mt-3 w-full border-0 border-b border-charcoal/22 bg-transparent px-0 py-3 text-lg outline-none transition-all duration-300 focus:border-bronze focus:pl-1" />
               </label>
             ))}
             <label className="block">
               <span className="text-[10px] uppercase tracking-[0.24em] text-stone">
                 Material Intent
               </span>
-              <textarea rows={4} className="mt-3 w-full resize-none border-0 border-b border-charcoal/22 bg-transparent px-0 py-4 text-lg outline-none transition-colors focus:border-bronze" />
+              <textarea rows={3} className="mt-3 w-full resize-none border-0 border-b border-charcoal/22 bg-transparent px-0 py-3 text-lg outline-none transition-all duration-300 focus:border-bronze focus:pl-1" />
             </label>
             <button className="mt-4 inline-flex w-fit items-center gap-3 border border-charcoal px-7 py-4 text-[11px] uppercase tracking-[0.22em] transition-all duration-500 ease-luxury hover:bg-charcoal hover:text-ivory">
               Send Inquiry
@@ -366,33 +386,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-charcoal px-5 py-14 text-ivory md:px-12 lg:px-16">
-        <div className="grid gap-12 md:grid-cols-[1fr_auto_auto_auto]">
-          <div>
-            <p className="font-serif text-4xl tracking-[0.08em]">Terra Nova</p>
-            <p className="mt-5 max-w-xs text-sm leading-7 text-ivory/52">
-              Global luxury sourcing studio for wood flooring, decking, cladding,
-              and bespoke architectural surfaces.
-            </p>
-          </div>
-          <div className="grid gap-4 text-[11px] uppercase tracking-[0.22em] text-ivory/62">
-            <a href="#studio">Studio</a>
-            <a href="#collections">Materials</a>
-            <a href="#projects">Projects</a>
-          </div>
-          <div className="grid gap-4 text-[11px] uppercase tracking-[0.22em] text-ivory/62">
-            <a href="mailto:amit@gswoods.com">amit@gswoods.com</a>
-            <a href="tel:+919867185966">+91 98671 85966</a>
-          </div>
-          <div className="grid gap-4 text-[11px] uppercase tracking-[0.22em] text-ivory/62">
-            <a href="#">Instagram</a>
-            <a href="#">LinkedIn</a>
-          </div>
-        </div>
-        <p className="mt-16 border-t border-ivory/10 pt-8 text-[10px] uppercase tracking-[0.24em] text-ivory/38">
-          Copyright 2026 Terra Nova. All rights reserved.
-        </p>
-      </footer>
+      <Footer />
     </main>
   );
 }
