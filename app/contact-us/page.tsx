@@ -41,26 +41,26 @@ export default function ContactUsPage() {
       <section className="px-5 pt-12 pb-8 md:px-12 lg:px-16">
         <div className="mx-auto max-w-6xl grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
           <motion.div initial="initial" animate="animate" variants={fade}>
-            <p className="mb-4 text-[11px] uppercase tracking-[0.28em] text-bronze">CONTACT</p>
-            <h1 className="font-serif text-[clamp(2.8rem,6vw,4.5rem)] font-medium leading-[0.9] tracking-[-0.02em] max-w-3xl">
+            <p className="mb-4 text-[12px] uppercase tracking-[0.28em] text-bronze">CONTACT</p>
+            <h1 className="max-w-3xl font-serif text-[clamp(3rem,6.5vw,5rem)] font-medium leading-[0.9] tracking-[-0.02em]">
               Start With Your Project
               <br />
               Requirement.
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-charcoal/80">Every project begins with a requirement.</p>
-            <p className="mt-4 max-w-2xl text-sm text-charcoal/70">Share a product requirement, project brief, BOQ, drawing, specification or simply an idea. We will evaluate the appropriate sourcing and procurement route.</p>
+            <p className="mt-4 max-w-2xl text-lg leading-8 text-charcoal/80">Every project begins with a requirement.</p>
+            <p className="mt-4 max-w-2xl text-[15px] leading-7 text-charcoal/70">Share a product requirement, project brief, BOQ, drawing, specification or simply an idea. We will evaluate the appropriate sourcing and procurement route.</p>
           </motion.div>
 
           <motion.aside initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0, transition: { duration: shouldReduce ? 0 : 0.6, delay: 0.08 } }} className="flex justify-end">
             <div className="ml-6 pl-6 max-w-xs" style={{ borderLeft: "1px solid rgba(17,17,17,0.08)" }}>
               <div className="mb-4">
-                <p className="mb-1 text-[11px] uppercase tracking-[0.18em] text-stone">02 — DIRECT CONTACT</p>
+                <p className="mb-1 text-[12px] uppercase tracking-[0.18em] text-stone">02 — DIRECT CONTACT</p>
                 <div className="mt-3 rounded-sm border border-charcoal/6 bg-ivory p-4">
-                  <p className="font-medium">Amit Mehta</p>
-                  <p className="mt-1 text-sm text-charcoal/70">Director</p>
-                  <p className="mt-4"><a href="tel:+919867185966" className="text-charcoal hover:text-bronze">+91 98671 85966</a></p>
-                  <p className="mt-1"><a href="mailto:amit@terranovasourcing.in" className="text-charcoal hover:text-bronze">amit@terranovasourcing.in</a></p>
-                  <p className="mt-3 text-sm">TerraNova Finishing Materials Pvt. Ltd.</p>
+                  <p className="text-lg font-medium">Amit Mehta</p>
+                  <p className="mt-1 text-[15px] text-charcoal/70">Director</p>
+                  <p className="mt-4 text-[15px]"><a href="tel:+919867185966" className="text-charcoal hover:text-bronze">+91 98671 85966</a></p>
+                  <p className="mt-1 text-[15px]"><a href="mailto:amit@terranovasourcing.in" className="text-charcoal hover:text-bronze">amit@terranovasourcing.in</a></p>
+                  <p className="mt-3 text-[15px]">TerraNova Finishing Materials Pvt. Ltd.</p>
 
                   <div className="mt-4 flex gap-3">
                     <a href="tel:+919867185966" className="inline-flex items-center gap-2 border border-charcoal px-4 py-2 text-[12px] uppercase tracking-[0.12em] hover:bg-charcoal hover:text-ivory transition">CALL AMIT →</a>
@@ -77,9 +77,9 @@ export default function ContactUsPage() {
       <section className="px-5 py-10 md:px-12 lg:px-16">
         <div className="mx-auto max-w-6xl">
           <motion.div initial="initial" animate="animate" variants={fade}>
-            <p className="mb-4 text-[11px] uppercase tracking-[0.28em] text-bronze">START WITH A REQUIREMENT</p>
-            <h2 className="font-serif text-[clamp(1.6rem,3.2vw,2.4rem)] font-medium leading-[0.95] max-w-lg">Tell us what your project needs.</h2>
-            <p className="mt-4 max-w-md text-base leading-7 text-charcoal/80">You do not need to have the complete procurement plan ready. Start with one requirement and we will take it from there.</p>
+            <p className="mb-4 text-[12px] uppercase tracking-[0.28em] text-bronze">START WITH A REQUIREMENT</p>
+            <h2 className="max-w-lg font-serif text-[clamp(2rem,3.8vw,2.8rem)] font-medium leading-[0.95]">Tell us what your project needs.</h2>
+            <p className="mt-4 max-w-md text-lg leading-8 text-charcoal/80">You do not need to have the complete procurement plan ready. Start with one requirement and we will take it from there.</p>
 
             <div className="mt-8">
               <button onClick={openForm} className="inline-flex items-center gap-3 border border-charcoal px-8 py-4 text-[13px] uppercase tracking-[0.18em] hover:bg-charcoal hover:text-ivory transition">
@@ -93,8 +93,8 @@ export default function ContactUsPage() {
       {/* WHAT YOU CAN APPROACH US FOR */}
       <section className="px-5 py-10 md:px-12 lg:px-16">
         <div className="mx-auto max-w-6xl">
-          <motion.p className="mb-6 text-[11px] uppercase tracking-[0.28em] text-bronze" {...fade}>WHAT YOU CAN APPROACH US FOR</motion.p>
-          <motion.h3 className="font-serif text-[clamp(2rem,4.2vw,3.2rem)] font-medium">One requirement can be the beginning.</motion.h3>
+          <motion.p className="mb-6 text-[12px] uppercase tracking-[0.28em] text-bronze" {...fade}>WHAT YOU CAN APPROACH US FOR</motion.p>
+          <motion.h3 className="font-serif text-[clamp(2.3rem,4.6vw,3.5rem)] font-medium">One requirement can be the beginning.</motion.h3>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {[
@@ -106,10 +106,10 @@ export default function ContactUsPage() {
             ].map((item, i) => (
               <motion.div key={item.n} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: shouldReduce ? 0 : 0.6, delay: i * 0.06 }} className="py-4">
                 <div className="flex items-start gap-6">
-                  <span className="font-serif text-3xl text-bronze">{item.n}</span>
+                  <span className="font-serif text-[2rem] text-bronze">{item.n}</span>
                   <div>
-                    <p className="text-sm uppercase tracking-[0.12em] text-stone">{item.title}</p>
-                    <p className="mt-2 text-sm text-charcoal/70">{item.body}</p>
+                    <p className="text-[12px] uppercase tracking-[0.12em] text-stone">{item.title}</p>
+                    <p className="mt-2 text-[15px] leading-7 text-charcoal/70">{item.body}</p>
                   </div>
                 </div>
               </motion.div>
@@ -121,8 +121,8 @@ export default function ContactUsPage() {
       {/* PROCUREMENT JOURNEY */}
       <section className="px-5 py-10 md:px-12 lg:px-16">
         <div className="mx-auto max-w-6xl">
-          <p className="mb-4 text-[11px] uppercase tracking-[0.22em] text-bronze">FROM REQUIREMENT TO PROCUREMENT</p>
-          <motion.div className="flex items-center gap-4 text-sm text-charcoal/80 overflow-x-auto" initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: shouldReduce ? 0 : 0.6 }}>
+          <p className="mb-4 text-[12px] uppercase tracking-[0.22em] text-bronze">FROM REQUIREMENT TO PROCUREMENT</p>
+          <motion.div className="flex items-center gap-4 text-[15px] text-charcoal/80 overflow-x-auto" initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: shouldReduce ? 0 : 0.6 }}>
             {[
               "Requirement",
               "Sourcing",
@@ -145,7 +145,7 @@ export default function ContactUsPage() {
       {/* WHO WE WORK WITH */}
       <section className="px-5 py-10 md:px-12 lg:px-16">
         <div className="mx-auto max-w-6xl">
-          <p className="mb-4 text-[11px] uppercase tracking-[0.22em] text-bronze">WHO WE WORK WITH</p>
+          <p className="mb-4 text-[12px] uppercase tracking-[0.22em] text-bronze">WHO WE WORK WITH</p>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {[
               { n: "01", title: "ARCHITECTS & DESIGNERS", body: "Design intent, references, finishes, materials and specifications." },
@@ -154,11 +154,11 @@ export default function ContactUsPage() {
             ].map((c, i) => (
               <motion.div key={c.n} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: shouldReduce ? 0 : 0.6, delay: i * 0.06 }} className="flex">
                 <div className="pr-6" style={{ borderRight: i < 2 ? "1px solid rgba(17,17,17,0.06)" : "none" }}>
-                  <span className="font-serif text-2xl text-bronze">{c.n}</span>
+                  <span className="font-serif text-[2rem] text-bronze">{c.n}</span>
                 </div>
                 <div className="pl-6">
-                  <p className="font-semibold">{c.title}</p>
-                  <p className="mt-2 text-sm text-charcoal/70">{c.body}</p>
+                  <p className="text-[15px] font-semibold">{c.title}</p>
+                  <p className="mt-2 text-[15px] leading-7 text-charcoal/70">{c.body}</p>
                 </div>
               </motion.div>
             ))}
@@ -170,9 +170,9 @@ export default function ContactUsPage() {
       {/* FINAL CTA */}
       <section className="bg-sand/20 px-5 py-12 md:px-12 lg:px-16">
         <div className="mx-auto max-w-6xl text-center">
-          <p className="mb-2 text-[11px] uppercase tracking-[0.28em] text-bronze">LET'S START WITH THE REQUIREMENT</p>
-          <p className="font-serif text-2xl md:text-3xl">We don't sell what we have.<br />We source what the project needs.</p>
-          <p className="mt-4 text-sm text-charcoal/70">Architecting Project Profits through Strategic Sourcing.</p>
+          <p className="mb-2 text-[12px] uppercase tracking-[0.28em] text-bronze">LET'S START WITH THE REQUIREMENT</p>
+          <p className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[1.05]">We don't sell what we have.<br />We source what the project needs.</p>
+          <p className="mt-4 text-[15px] leading-7 text-charcoal/70">Architecting Project Profits through Strategic Sourcing.</p>
           <div className="mt-6">
             <button onClick={openForm} className="inline-flex items-center gap-3 border border-charcoal px-8 py-4 text-[13px] uppercase tracking-[0.18em] hover:bg-charcoal hover:text-ivory transition">START A PROJECT →</button>
           </div>

@@ -65,22 +65,24 @@ export default function ProductsPage() {
     <main className="bg-ivory text-charcoal">
       <Header variant="light" />
 
-      <section className="px-5 pb-10 pt-10 md:px-12 lg:px-16">
-        <p className="mb-6 text-[11px] uppercase tracking-[0.28em] text-bronze">ALL COLLECTIONS</p>
-        <h1 className="max-w-5xl font-serif text-[clamp(2.4rem,5vw,3.6rem)] font-medium leading-[0.92]">Material collections for resolved spaces.</h1>
-        <p className="mt-6 max-w-3xl text-sm text-charcoal/70">TerraNova works across a focused range of finishing-material categories, sourcing from specialised manufacturing partners across multiple countries. Our product approach is project-led: we evaluate specification, quantity, design and commercial objectives before identifying the right sourcing route.</p>
+      <section className="px-5 pb-12 pt-10 md:px-8 md:pb-16 md:pt-14 lg:px-10">
+        <div className="max-w-4xl">
+          <p className="mb-4 text-[11px] uppercase tracking-[0.28em] text-bronze">ALL COLLECTIONS</p>
+          <h1 className="font-serif text-[clamp(2.4rem,5vw,3.6rem)] font-medium leading-[0.92] tracking-[-0.03em]">Material collections for resolved spaces.</h1>
+          <p className="mt-5 max-w-2xl text-sm leading-relaxed text-charcoal/70 md:mt-6">TerraNova works across a focused range of finishing-material categories, sourcing from specialised manufacturing partners across multiple countries. Our product approach is project-led: we evaluate specification, quantity, design and commercial objectives before identifying the right sourcing route.</p>
+        </div>
       </section>
 
-      <section className="px-5 py-10 md:px-12 lg:px-16">
+      <section className="px-5 py-10 md:px-8 lg:px-10">
         <ProductsGridClient />
 
-        <div className="mx-auto max-w-6xl px-5 md:px-12 lg:px-16">
+        <div className="px-0 pt-10 md:px-0 lg:px-0">
           {/* ONE PROJECT. MULTIPLE POSSIBILITIES */}
-          <section className="py-10 border-t border-charcoal/12">
-            <h3 className="font-serif text-3xl">One Project. Multiple Possibilities.</h3>
-            <p className="mt-4 max-w-3xl text-sm text-charcoal/70">A project may require one product or a combination of categories. TerraNova evaluates requirements across products, factories and countries to determine the most appropriate sourcing solution.</p>
+          <section className="border-t border-charcoal/12 py-10">
+            <h3 className="font-serif text-[clamp(2rem,3vw,3rem)] leading-[1.05] tracking-[-0.03em]">One Project. Multiple Possibilities.</h3>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-charcoal/70 md:text-[15px]">A project may require one product or a combination of categories. TerraNova evaluates requirements across products, factories and countries to determine the most appropriate sourcing solution.</p>
             <div className="mt-6">
-              <Link href="/contact-us?open=1" className="inline-flex items-center gap-3 border border-charcoal px-6 py-3 text-[13px] uppercase tracking-[0.12em] hover:bg-charcoal hover:text-ivory transition">TELL US WHAT THE PROJECT NEEDS → <ArrowRight size={14} /></Link>
+              <Link href="/contact-us?open=1" className="inline-flex items-center gap-3 border border-charcoal px-7 py-3.5 text-[12px] uppercase tracking-[0.14em] transition hover:bg-charcoal hover:text-ivory">TELL US WHAT THE PROJECT NEEDS → <ArrowRight size={14} /></Link>
             </div>
           </section>
         </div>
