@@ -64,49 +64,7 @@ const fadeUpDelay = (delay: number) => ({
   transition: { ...fadeUp.transition, delay },
 });
 
-/* ─────────────────────────────────────────────
-   HERO IMAGE with scroll reveal
-   ───────────────────────────────────────────── */
-
-function HeroImage() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const shouldReduce = useReducedMotion();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const imgY = useTransform(scrollYProgress, [0, 1], shouldReduce ? ["0%", "0%"] : ["-4%", "4%"]);
-
-  return (
-    <motion.div
-      ref={ref}
-      className="tn-editorial-img mx-5 md:mx-12 lg:mx-16"
-      style={{
-        height: "clamp(280px, 55vh, 680px)",
-        clipPath: isInView
-          ? "inset(0% 0% 0% 0%)"
-          : "inset(100% 0% 0% 0%)",
-        transition: shouldReduce ? "none" : "clip-path 1s cubic-bezier(0.16, 1, 0.3, 1)",
-      }}
-    >
-      <motion.div className="absolute inset-0" style={{ y: imgY }}>
-        <Image
-          src={images.hero}
-          alt="Premium architectural interior with warm timber flooring"
-          fill
-          sizes="100vw"
-          className="object-cover"
-          style={{
-            transform: isInView ? "scale(1)" : "scale(1.04)",
-            transition: shouldReduce ? "none" : "transform 1.1s cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        />
-      </motion.div>
-    </motion.div>
-  );
-}
+/* Hero image removed — page is typography-led */
 
 /* Editorial images removed — page is typography-led */
 
