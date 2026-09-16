@@ -170,8 +170,8 @@ export default function ContactUsPage() {
       {/* FINAL CTA */}
       <section className="bg-sand/20 px-5 py-12 md:px-12 lg:px-16">
         <div className="mx-auto max-w-6xl text-center">
-          <p className="mb-2 text-[12px] uppercase tracking-[0.28em] text-bronze">LET'S START WITH THE REQUIREMENT</p>
-          <p className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[1.05]">We don't sell what we have.<br />We source what the project needs.</p>
+          <p className="mb-2 text-[12px] uppercase tracking-[0.28em] text-bronze">LET&apos;S START WITH THE REQUIREMENT</p>
+          <p className="font-serif text-[clamp(2rem,4vw,3rem)] leading-[1.05]">We don&apos;t sell what we have.<br />We source what the project needs.</p>
           <p className="mt-4 text-[15px] leading-7 text-charcoal/70">Architecting Project Profits through Strategic Sourcing.</p>
           <div className="mt-6">
             <button onClick={openForm} className="inline-flex items-center gap-3 border border-charcoal px-8 py-4 text-[13px] uppercase tracking-[0.18em] hover:bg-charcoal hover:text-ivory transition">START A PROJECT →</button>
