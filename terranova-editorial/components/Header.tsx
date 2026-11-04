@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import { collections, heroImage } from "@/lib/content";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -15,68 +18,97 @@ const navLinks = [
   { label: "Testimonials / Blog", href: "/testimonials-blog" }
 ];
 
+/* An image for each menu entry, drawn from the site's own photography. */
+const menuImages = [
+  heroImage,
+  "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1400&q=88",
+  "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1500&q=88",
+  collections[0].image,
+  collections[6].image,
+  collections[3].image,
+  collections[5].image
+];
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
 interface HeaderProps {
+  /** "dark": sits over a full-bleed image (ivory text) until scrolled. */
   variant?: "dark" | "light";
 }
 
-/**
- * Masthead. Wordmark set like a journal title, navigation as a quiet
- * sentence-case index with a bronze underline marking the current page.
- */
 export default function Header({ variant = "light" }: HeaderProps) {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered] = useState(0);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    setScrolled(y > 40);
+    setHidden(y > 240 && y > prev && !open);
+  });
+
+  useEffect(() => setOpen(false), [pathname]);
 
   useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    document.body.style.overflow = open ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [mobileOpen]);
+  }, [open]);
 
-  const isDark = variant === "dark";
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const overlay = variant === "dark" && !scrolled && !open;
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
     <>
-      <header
-        className={`relative z-20 ${isDark ? "text-ivory" : "text-charcoal"}`}
+      {variant === "light" && <div className="h-[76px] md:h-[92px]" aria-hidden="true" />}
+
+      <motion.header
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
+          open
+            ? "bg-transparent text-ivory"
+            : overlay
+            ? "bg-transparent text-ivory"
+            : scrolled
+            ? "bg-ivory/85 text-charcoal backdrop-blur-md"
+            : "bg-ivory text-charcoal"
+        }`}
+        animate={{ y: hidden ? "-100%" : "0%" }}
+        transition={{ duration: 0.6, ease }}
       >
-        <div
-          className={`frame flex items-center justify-between py-6 md:py-7 ${
-            isDark ? "border-b border-ivory/15" : "border-b border-charcoal/12"
-          }`}
-        >
-          <Link
-            href="/"
-            className="font-serif text-[1.65rem] leading-none tracking-[0.06em] md:text-[2rem]"
-            aria-label="Terra Nova, home"
-          >
-            Terra Nova
+        <div className="frame flex h-[76px] items-center justify-between md:h-[92px]">
+          <Link href="/" className="group relative z-10 flex items-baseline gap-3" aria-label="Terra Nova, home">
+            <span className="font-serif text-[1.7rem] leading-none tracking-[0.04em] md:text-[2.05rem]">Terra Nova</span>
           </Link>
 
-          <nav aria-label="Primary" className="hidden lg:block">
-            <ul className="flex items-center gap-8 text-[0.84rem] tracking-[0.01em]">
-              {navLinks.map((link) => {
+          <nav aria-label="Primary" className="hidden xl:block">
+            <ul className="flex items-center gap-1 text-[0.84rem]">
+              {navLinks.slice(1, 6).map((link) => {
                 const active = isActive(link.href);
                 return (
                   <li key={link.href}>
                     <Link
                       href={link.href}
                       aria-current={active ? "page" : undefined}
-                      className={`relative pb-1 transition-opacity duration-300 ${
-                        active ? "opacity-100" : "opacity-60 hover:opacity-100"
-                      }`}
+                      className="group relative block overflow-hidden px-3 py-2"
                     >
-                      {link.label}
-                      {active && (
-                        <span className="absolute inset-x-0 -bottom-px h-px bg-bronze" />
-                      )}
+                      <span className="block transition-transform duration-500 ease-luxury group-hover:-translate-y-[calc(100%+0.75rem)]">
+                        {link.label}
+                      </span>
+                      <span className="absolute inset-x-3 top-2 block translate-y-[calc(100%+0.75rem)] text-bronze transition-transform duration-500 ease-luxury group-hover:translate-y-0">
+                        {link.label}
+                      </span>
+                      {active && <span className="absolute inset-x-3 bottom-1 h-px bg-bronze" />}
                     </Link>
                   </li>
                 );
@@ -84,71 +116,115 @@ export default function Header({ variant = "light" }: HeaderProps) {
             </ul>
           </nav>
 
-          <button
-            type="button"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className={`relative z-50 -mr-2 flex h-11 items-center gap-3 px-2 text-[0.84rem] lg:hidden ${
-              mobileOpen ? "text-ivory" : ""
-            }`}
-            aria-expanded={mobileOpen}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          >
-            <span className="flex w-6 flex-col gap-[6px]">
-              <motion.span
-                className="block h-px w-full bg-current"
-                animate={mobileOpen ? { rotate: 45, y: 3.5 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              />
-              <motion.span
-                className="block h-px w-full bg-current"
-                animate={mobileOpen ? { rotate: -45, y: -3.5 } : { rotate: 0, y: 0 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              />
-            </span>
-          </button>
+          <div className="relative z-10 flex items-center gap-3">
+            <Link
+              href="/contact-us"
+              className={`hidden items-center gap-2 rounded-full border px-5 py-2.5 text-[0.82rem] transition-colors duration-500 md:inline-flex ${
+                overlay || open
+                  ? "border-ivory/40 hover:bg-ivory hover:text-charcoal"
+                  : "border-charcoal/25 hover:border-charcoal hover:bg-charcoal hover:text-ivory"
+              }`}
+            >
+              Discuss Your Project <ArrowUpRight size={14} />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+              aria-expanded={open}
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="flex h-11 items-center gap-3 rounded-full px-1 text-[0.82rem]"
+            >
+              <span className="hidden sm:inline">{open ? "Close" : "Menu"}</span>
+              <span className="relative flex h-10 w-10 items-center justify-center rounded-full border border-current/30" style={{ borderColor: "currentColor" }}>
+                <motion.span
+                  className="absolute h-px w-4 bg-current"
+                  animate={open ? { rotate: 45, y: 0 } : { rotate: 0, y: -3 }}
+                  transition={{ duration: 0.5, ease }}
+                />
+                <motion.span
+                  className="absolute h-px w-4 bg-current"
+                  animate={open ? { rotate: -45, y: 0 } : { rotate: 0, y: 3 }}
+                  transition={{ duration: 0.5, ease }}
+                />
+              </span>
+            </button>
+          </div>
         </div>
-      </header>
+      </motion.header>
 
       <AnimatePresence>
-        {mobileOpen && (
+        {open && (
           <motion.div
             className="fixed inset-0 z-40 overflow-y-auto bg-charcoal text-ivory"
+            data-lenis-prevent
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
           >
-            <div className="frame flex min-h-full flex-col justify-between pb-10 pt-28">
-              <ol className="space-y-1">
-                {navLinks.map((link, index) => (
-                  <motion.li
-                    key={link.href}
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.15 + index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={`flex items-baseline gap-5 py-2 font-serif text-[2.4rem] leading-none ${
-                        isActive(link.href) ? "text-ivory" : "text-ivory/55"
-                      }`}
+            <div className="frame grid min-h-full grid-cols-12 gap-x-8 pb-10 pt-28 md:pt-36">
+              <ol className="col-span-12 lg:col-span-7" onPointerLeave={() => setHovered(navLinks.findIndex((l) => isActive(l.href)))}>
+                {navLinks.map((link, i) => (
+                  <li key={link.href} className="overflow-hidden border-b border-ivory/10">
+                    <motion.div
+                      initial={{ y: "100%" }}
+                      animate={{ y: "0%" }}
+                      exit={{ y: "100%" }}
+                      transition={{ duration: 0.8, ease, delay: 0.25 + i * 0.05 }}
                     >
-                      <span className="numeral w-6 text-base text-sand">{index + 1}</span>
-                      {link.label}
-                    </Link>
-                  </motion.li>
+                      <Link
+                        href={link.href}
+                        onPointerEnter={() => setHovered(i)}
+                        className="group flex items-baseline gap-5 py-3 md:py-4"
+                      >
+                        <span className="numeral w-8 text-base text-sand/70">{String(i + 1).padStart(2, "0")}</span>
+                        <span
+                          className={`font-serif text-[clamp(2.2rem,5.4vw,4.6rem)] leading-[0.95] tracking-[-0.02em] transition-all duration-700 ease-luxury group-hover:translate-x-4 group-hover:italic ${
+                            isActive(link.href) ? "text-ivory" : "text-ivory/55 group-hover:text-ivory"
+                          }`}
+                        >
+                          {link.label}
+                        </span>
+                      </Link>
+                    </motion.div>
+                  </li>
                 ))}
               </ol>
 
-              <div className="mt-14 space-y-2 border-t border-ivory/15 pt-6 text-sm text-ivory/60">
-                <a href="mailto:amit@gswoods.com" className="block">
-                  amit@gswoods.com
-                </a>
-                <a href="tel:+919867185966" className="block">
-                  +91 98671 85966
-                </a>
+              <div className="relative col-span-5 hidden lg:block">
+                <motion.div
+                  className="sticky top-36 aspect-[4/5] overflow-hidden"
+                  initial={{ clipPath: "inset(100% 0 0 0)" }}
+                  animate={{ clipPath: "inset(0% 0 0 0)" }}
+                  exit={{ clipPath: "inset(100% 0 0 0)" }}
+                  transition={{ duration: 1.1, ease, delay: 0.35 }}
+                >
+                  {menuImages.map((src, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute inset-0"
+                      initial={false}
+                      animate={{ opacity: hovered === i ? 1 : 0, scale: hovered === i ? 1 : 1.12 }}
+                      transition={{ duration: 0.9, ease }}
+                    >
+                      <Image src={src} alt="" fill loading="eager" sizes="40vw" className="object-cover" />
+                    </motion.div>
+                  ))}
+                </motion.div>
               </div>
+
+              <motion.div
+                className="col-span-12 mt-14 flex flex-wrap gap-x-10 gap-y-3 border-t border-ivory/15 pt-6 text-sm text-ivory/60"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                <a href="mailto:amit@gswoods.com" className="hover:text-ivory">amit@gswoods.com</a>
+                <a href="tel:+919867185966" className="hover:text-ivory">+91 98671 85966</a>
+                <a href="#" className="hover:text-ivory">Instagram</a>
+                <a href="#" className="hover:text-ivory">LinkedIn</a>
+              </motion.div>
             </div>
           </motion.div>
         )}

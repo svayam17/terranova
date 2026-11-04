@@ -2,7 +2,10 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
+import StageJourney from "@/components/StageJourney";
 import { RunHead } from "@/components/Editorial";
+import { Magnetic, Marquee, ProgressRail, Reveal, ScrollWords, SplitText, Stagger } from "@/components/motion";
 
 const stages = [
   { number: "01", label: "Project requirement", heading: "We start with understanding the project.", copy: "Every project begins with a requirement. We study the BOQ, design intent, technical specifications, quantities, project timelines and commercial objectives to understand what the project actually needs.", note: "From this, we build the appropriate sourcing and procurement approach.", tags: ["BOQ", "Design intent", "Technical specification", "Quantity", "Timeline", "Commercial objective"] },
@@ -37,160 +40,160 @@ export default function ServicesPage() {
     <main className="bg-ivory text-charcoal">
       <Header variant="light" />
 
-      {/* ═══ Opening ═════════════════════════════════════════ */}
-      <section className="frame pb-20 pt-10 md:pb-28 md:pt-16">
-        <RunHead n="i">Our services</RunHead>
-        <h1 className="t-display mt-10">
-          <span className="reveal-line"><span>From project requirement</span></span>
-          <span className="reveal-line md:pl-[16.66%]"><span>to project execution.</span></span>
-        </h1>
+      <PageHero
+        label="Our services"
+        lines={["From project requirement", "to project execution."]}
+        aside={
+          <div className="grid gap-8 sm:grid-cols-2">
+            <p className="t-lead text-charcoal/80">
+              TerraNova provides integrated sourcing and procurement solutions for finishing materials, built around the specific requirements of each project.
+            </p>
+            <p className="t-body border-l border-bronze pl-6">
+              From identifying the right manufacturing source to custom product development, production, quality control, international procurement, import and project execution, we manage the procurement journey as an integrated process.
+            </p>
+          </div>
+        }
+      />
 
-        <div className="reveal-fade grid-12 mt-14 gap-y-8">
-          <p className="t-lead col-span-12 text-charcoal/80 md:col-span-5 md:col-start-2">
-            TerraNova provides integrated sourcing and procurement solutions for finishing materials, built around the specific requirements of each project.
-          </p>
-          <p className="t-body col-span-12 border-l border-bronze pl-6 md:col-span-4 md:col-start-8">
-            From identifying the right manufacturing source to custom product development, production, quality control, international procurement, import and project execution, we manage the procurement journey as an integrated process.
-          </p>
-        </div>
+      <div className="border-y border-charcoal/12 bg-charcoal py-6 text-ivory">
+        <Marquee
+          items={["One requirement.", "One procurement strategy.", "End to end execution."]}
+          speed={30}
+          itemClassName="font-serif text-[clamp(1.8rem,3.6vw,3.4rem)] italic leading-none"
+          altClassName="text-sand not-italic"
+        />
+      </div>
 
-        <p className="reveal-fade mt-16 border-t border-charcoal/12 pt-6 font-serif text-[1.35rem] italic text-bronze md:text-[1.6rem]">
-          One requirement. One procurement strategy. End to end execution.
-        </p>
-      </section>
-
-      {/* ═══ The procurement journey — eight chapters ════════ */}
+      {/* ═══ Procurement journey ═════════════════════════════ */}
       <section className="bg-paper">
         <div className="frame spread">
-          <div className="grid-12 gap-y-8">
-            <div className="col-span-12 md:col-span-3"><RunHead n="ii">The procurement journey</RunHead></div>
-            <h2 className="t-h1 col-span-12 md:col-span-9">One connected process, shaped around the project.</h2>
+          <div className="grid-12 mb-16 gap-y-8 md:mb-24">
+            <div className="col-span-12 md:col-span-4"><Reveal><RunHead n="ii">The procurement journey</RunHead></Reveal></div>
+            <h2 className="t-h1 col-span-12 md:col-span-8"><SplitText text="One connected process, shaped around the project." stagger={0.04} /></h2>
           </div>
-
-          <ol className="mt-16 border-t border-charcoal/16 md:mt-24">
-            {stages.map((stage) => (
-              <li key={stage.number} className="grid-12 gap-y-6 border-b border-charcoal/12 py-12 md:py-16">
-                <div className="col-span-12 md:col-span-3">
-                  <span className="numeral block text-[clamp(4.5rem,8vw,8rem)] leading-[0.8] text-bronze">{stage.number}</span>
-                  <p className="t-small mt-5 text-charcoal/60">{stage.label}</p>
-                </div>
-                <h3 className="t-h2 col-span-12 md:col-span-4">{stage.heading}</h3>
-                <div className="col-span-12 md:col-span-4 md:col-start-9">
-                  <p className="t-body">{stage.copy}</p>
-                  <ul className="inline-list mt-6">
-                    {stage.tags.map((tag) => <li key={tag}>{tag}</li>)}
-                  </ul>
-                  <p className="mt-6 font-serif text-[1.2rem] italic leading-snug text-charcoal/85">{stage.note}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+          <StageJourney stages={stages} />
         </div>
       </section>
 
-      {/* ═══ Process ═════════════════════════════════════════ */}
+      {/* ═══ Process — dark tiles ════════════════════════════ */}
       <section className="on-dark bg-charcoal text-ivory">
         <div className="frame spread">
           <div className="grid-12 gap-y-8">
-            <div className="col-span-12 md:col-span-3"><RunHead n="iii">The TerraNova process</RunHead></div>
+            <div className="col-span-12 md:col-span-3"><Reveal><RunHead n="iii">The TerraNova process</RunHead></Reveal></div>
             <h2 className="t-h1 col-span-12 md:col-span-9">
-              One requirement.
-              <span className="block">One connected procurement journey.</span>
+              <SplitText text={["One requirement.", "One connected procurement journey."]} lineClassName="[&:nth-child(2)]:italic [&:nth-child(2)]:text-sand" />
             </h2>
           </div>
 
-          <ol className="mt-16 grid border-t border-ivory/15 sm:grid-cols-2 lg:grid-cols-4 md:mt-20">
+          <Stagger className="mt-16 grid gap-px bg-ivory/12 sm:grid-cols-2 lg:grid-cols-4 md:mt-24" gap={0.07}>
             {process.map(([name, text], index) => (
-              <li key={name} className="border-b border-ivory/12 py-8 pr-6 sm:odd:border-r sm:even:pl-6 lg:pl-6 lg:[&:nth-child(4n)]:border-r-0 lg:[&:nth-child(4n+1)]:pl-0 lg:border-r">
-                <span className="numeral text-3xl text-sand">{String(index + 1).padStart(2, "0")}</span>
-                <h3 className="t-h3 mt-6">{name}</h3>
-                <p className="t-body mt-3">{text}</p>
-              </li>
+              <article key={name} className="group relative h-full min-h-[17rem] overflow-hidden bg-charcoal p-7">
+                <span className="absolute inset-0 origin-bottom scale-y-0 bg-bronze transition-transform duration-700 ease-luxury group-hover:scale-y-100" />
+                <div className="relative flex h-full flex-col justify-between gap-10">
+                  <span className="numeral text-5xl text-sand/80 transition-colors duration-500 group-hover:text-ivory">{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h3 className="t-h3">{name}</h3>
+                    <p className="mt-3 text-[0.92rem] leading-[1.7] text-ivory/60 transition-colors duration-500 group-hover:text-ivory/90">{text}</p>
+                  </div>
+                </div>
+              </article>
             ))}
-          </ol>
+          </Stagger>
         </div>
       </section>
 
       {/* ═══ Scope ═══════════════════════════════════════════ */}
       <section className="frame spread">
         <div className="grid-12 gap-y-8">
-          <div className="col-span-12 md:col-span-3"><RunHead n="iv">Procurement scope</RunHead></div>
+          <div className="col-span-12 md:col-span-3"><Reveal><RunHead n="iv">Procurement scope</RunHead></Reveal></div>
           <div className="col-span-12 md:col-span-9">
-            <h2 className="t-h1">One requirement or the complete procurement cycle.</h2>
-            <div className="grid-12 mt-10 gap-y-6">
-              <p className="t-body col-span-12 md:col-span-6">
-                A project may engage TerraNova for a single sourcing requirement or for a broader procurement scope covering multiple stages.
-              </p>
-              <ul className="inline-list col-span-12 self-end md:col-span-6">
-                {["Specification", "BOQ", "Drawing", "Product reference", "Design requirement"].map((item) => <li key={item}>{item}</li>)}
-              </ul>
+            <h2 className="t-h1"><SplitText text="One requirement or the complete procurement cycle." stagger={0.04} /></h2>
+            <div className="mt-10 grid gap-8 md:grid-cols-2">
+              <Reveal>
+                <p className="t-body">
+                  A project may engage TerraNova for a single sourcing requirement or for a broader procurement scope covering multiple stages.
+                </p>
+              </Reveal>
+              <Stagger className="flex flex-wrap gap-2" gap={0.05} y={10}>
+                {["Specification", "BOQ", "Drawing", "Product reference", "Design requirement"].map((item) => (
+                  <span key={item} className="inline-block rounded-full border border-charcoal/15 px-4 py-2 text-[0.8rem] text-charcoal/75">{item}</span>
+                ))}
+              </Stagger>
             </div>
           </div>
         </div>
 
-        <div className="mt-20 border-y border-charcoal/14 py-10 md:mt-28">
-          <ol className="flex flex-wrap items-baseline gap-x-4 gap-y-2 font-serif text-[clamp(1.4rem,2.6vw,2.4rem)] leading-tight">
-            {["Sourcing", "Manufacturing", "Quality", "Import", "Supply", "Execution"].map((item, index, all) => (
-              <li key={item} className="flex items-baseline gap-4">
-                {item}
-                {index < all.length - 1 && <span aria-hidden="true" className="text-bronze">/</span>}
-              </li>
-            ))}
-          </ol>
-          <p className="t-lead mt-8 italic text-charcoal/75">
-            You define the requirement. We build the procurement route.
-          </p>
-        </div>
+        <ProgressRail
+          steps={["Sourcing", "Manufacturing", "Quality", "Import", "Supply", "Execution"]}
+          className="mt-20 md:mt-28"
+        />
+        <Reveal>
+          <p className="t-h2 mt-20 italic md:ml-[25%]">You define the requirement. We build the procurement route.</p>
+        </Reveal>
       </section>
 
       {/* ═══ Objective ═══════════════════════════════════════ */}
-      <section className="bg-sand/45">
+      <section className="bg-sand/50">
         <div className="frame spread">
           <div className="grid-12 gap-y-8">
-            <div className="col-span-12 md:col-span-3"><RunHead n="v">Our objective</RunHead></div>
+            <div className="col-span-12 md:col-span-3"><Reveal><RunHead n="v">Our objective</RunHead></Reveal></div>
             <div className="col-span-12 md:col-span-9">
               <h2 className="t-h1">
-                Design intent.
-                <span className="block">Technical performance. Project economics.</span>
+                <SplitText text={["Design intent.", "Technical performance. Project economics."]} />
               </h2>
-              <p className="t-body measure mt-8">
-                Every service we provide is ultimately directed towards achieving three project objectives.
-              </p>
+              <Reveal delay={0.15}>
+                <p className="t-body measure mt-8">
+                  Every service we provide is ultimately directed towards achieving three project objectives.
+                </p>
+              </Reveal>
             </div>
           </div>
 
-          <div className="grid-12 mt-16 gap-y-10 border-t border-charcoal/14 pt-10">
+          <Stagger className="mt-16 grid gap-5 md:grid-cols-3" gap={0.12}>
             {objectives.map(([name, text], i) => (
-              <article key={name} className={`col-span-12 md:col-span-3 ${i === 0 ? "md:col-start-4" : ""}`}>
-                <h3 className="t-small text-bronze">{name}</h3>
-                <p className="t-h3 mt-4">{text}</p>
+              <article
+                key={name}
+                className="group flex h-full min-h-[20rem] flex-col justify-between bg-ivory p-8 transition-all duration-700 ease-luxury hover:-translate-y-2 hover:bg-charcoal hover:text-ivory md:p-10"
+              >
+                <div className="flex items-baseline justify-between">
+                  <h3 className="t-small text-bronze group-hover:text-sand">{name}</h3>
+                  <span className="numeral text-2xl text-charcoal/25 group-hover:text-ivory/30">{String(i + 1).padStart(2, "0")}</span>
+                </div>
+                <p className="t-h2">{text}</p>
               </article>
             ))}
-          </div>
+          </Stagger>
 
-          <p className="t-h2 mt-20 md:ml-[25%]">That is how TerraNova approaches project procurement.</p>
+          <ScrollWords text="That is how TerraNova approaches project procurement." className="t-h1 mt-24 md:ml-[25%]" />
         </div>
       </section>
 
       {/* ═══ Call to action ══════════════════════════════════ */}
       <section className="frame spread">
-        <div className="grid-12 gap-y-10">
-          <div className="col-span-12 md:col-span-3"><RunHead n="vi">Start with a requirement</RunHead></div>
-          <div className="col-span-12 md:col-span-9">
-            <h2 className="t-display">Have a project requirement?</h2>
-            <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-              <p className="t-body measure">
-                You do not need to have the complete procurement plan ready. If you have a product requirement, specification, BOQ, drawing, reference or simply a project need, start there.
-              </p>
-              <Link href="/contact-us" className="btn w-fit shrink-0">
-                Discuss your project <ArrowUpRight size={16} />
-              </Link>
-            </div>
-          </div>
+        <Reveal><RunHead n="vi">Start with a requirement</RunHead></Reveal>
+        <h2 className="t-display mt-10"><SplitText text="Have a project requirement?" /></h2>
+        <div className="mt-14 flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
+          <Reveal>
+            <p className="t-body measure">
+              You do not need to have the complete procurement plan ready. If you have a product requirement, specification, BOQ, drawing, reference or simply a project need, start there.
+            </p>
+          </Reveal>
+          <Magnetic>
+            <Link
+              href="/contact-us"
+              data-cursor="Talk"
+              className="group flex h-40 w-40 shrink-0 items-center justify-center rounded-full bg-bronze text-center text-sm text-ivory transition-colors duration-500 hover:bg-charcoal md:h-48 md:w-48"
+            >
+              <span>
+                Discuss your project
+                <ArrowUpRight size={18} className="mx-auto mt-2 transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1" />
+              </span>
+            </Link>
+          </Magnetic>
         </div>
       </section>
 
-      <Footer />
+      <Footer cta={false} />
     </main>
   );
 }

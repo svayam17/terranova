@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import PageTransition from "@/components/PageTransition";
 import SmoothScroll from "@/components/SmoothScroll";
+import { Cursor } from "@/components/motion";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -66,6 +67,7 @@ export default function RootLayout({
       </head>
       <body className={`${cormorant.variable} ${inter.variable}`} suppressHydrationWarning>
         <SmoothScroll />
+        <Cursor />
         <PageTransition>{children}</PageTransition>
       </body>
     </html>

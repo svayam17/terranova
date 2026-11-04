@@ -506,3 +506,53 @@ textarea {
     opacity: 1;
   }
 }
+
+/* ── Marquee ─────────────────────────────────────────────── */
+.marquee__track {
+  animation: marquee var(--marquee-speed, 40s) linear infinite;
+}
+
+.marquee__track--rev {
+  animation-direction: reverse;
+}
+
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Outlined display type for marquees */
+.t-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(17, 17, 17, 0.55);
+}
+
+.on-dark .t-outline {
+  -webkit-text-stroke: 1px rgba(245, 241, 235, 0.45);
+}
+
+/* Hide the native cursor only where the custom one runs */
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+/* Scroll cue */
+.scroll-cue {
+  animation: cue 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  transform-origin: top;
+}
+
+@keyframes cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
