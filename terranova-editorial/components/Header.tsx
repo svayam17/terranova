@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { collections, heroImage } from "@/lib/content";
+import { useIntroDelay } from "@/components/PageTransition";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -43,6 +44,7 @@ export default function Header({ variant = "light" }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState(0);
   const { scrollY } = useScroll();
+  const intro = useIntroDelay();
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
@@ -86,7 +88,12 @@ export default function Header({ variant = "light" }: HeaderProps) {
         animate={{ y: hidden ? "-100%" : "0%" }}
         transition={{ duration: 0.6, ease }}
       >
-        <div className="frame flex h-[76px] items-center justify-between md:h-[92px]">
+        <motion.div
+          className="frame flex h-[76px] items-center justify-between md:h-[92px]"
+          initial={{ opacity: 0, y: -24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease, delay: intro + 0.05 }}
+        >
           <Link href="/" className="group relative z-10 flex items-baseline gap-3" aria-label="Terra Nova, home">
             <span className="font-serif text-[1.7rem] leading-none tracking-[0.04em] md:text-[2.05rem]">Terra Nova</span>
           </Link>
@@ -149,7 +156,7 @@ export default function Header({ variant = "light" }: HeaderProps) {
               </span>
             </button>
           </div>
-        </div>
+        </motion.div>
       </motion.header>
 
       <AnimatePresence>

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Reveal, SplitText, Stagger, ease } from "@/components/motion";
+import { RouteCanvas } from "@/components/Route";
 
 type Stage = {
   number: string;
@@ -25,6 +26,7 @@ export default function StageJourney({ stages }: { stages: Stage[] }) {
   const fill = useSpring(scrollYProgress, { stiffness: 100, damping: 26 });
 
   return (
+    <RouteCanvas>
     <div ref={wrap} className="grid-12 relative">
       {/* Sticky stage counter */}
       <aside className="col-span-12 hidden md:col-span-4 md:block">
@@ -71,6 +73,7 @@ export default function StageJourney({ stages }: { stages: Stage[] }) {
         ))}
       </ol>
     </div>
+    </RouteCanvas>
   );
 }
 
@@ -83,7 +86,8 @@ function StageItem({ stage, onActive, last }: { stage: Stage; onActive: () => vo
   }, [inView, onActive]);
 
   return (
-    <li ref={ref} className={`py-14 md:min-h-[70vh] md:py-20 ${last ? "" : "border-b border-charcoal/12"}`}>
+    <li ref={ref} className={`relative z-[2] py-14 md:min-h-[70vh] md:py-20 ${last ? "" : "border-b border-charcoal/12"}`}>
+      <span data-route-stop={stage.label} data-route-swing="0.025" data-route-dy="34" className="block h-0" aria-hidden="true" />
       <p className="flex items-baseline gap-4 md:hidden">
         <span className="numeral text-5xl text-bronze">{stage.number}</span>
         <span className="t-small text-charcoal/60">{stage.label}</span>
