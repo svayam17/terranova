@@ -1,90 +1,99 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import ProductsGridClient from "@/components/ProductsGridClient";
+import PageHero from "@/components/PageHero";
+import { RunHead } from "@/components/Editorial";
+import { ClipImage, HoverList, Magnetic, Reveal, SplitText } from "@/components/motion";
+import { collections } from "@/lib/content";
 
 export const metadata = {
   title: "Products | TerraNova",
-  description: "Material collections and editorial catalogue for project-led sourcing.",
+  description: "Material collections and editorial catalogue for project-led sourcing."
 };
 
-const sections = [
-  {
-    id: "flooring",
-    number: "01",
-    title: "FLOORING",
-    sub: [
-      {
-        heading: "WOOD FLOORING",
-        items: ["Engineered Wood Flooring", "Solid Wood Flooring", "Parquet Flooring", "Herringbone & Chevron", "Custom Wood Flooring"],
-      },
-      { heading: "VINYL & RESILIENT FLOORING", items: ["SPC Flooring", "LVT Flooring", "Vinyl Flooring"] },
-      { heading: "LAMINATE FLOORING", items: ["Residential & Commercial Laminate", "Hospitality Laminate", "Project-Specific Laminate Solutions"] },
-      { heading: "CARPET", items: ["Carpet Tiles", "Wall-to-Wall Carpet", "Hospitality Carpet", "Custom Printed Carpet", "Area Rugs", "Project-Specific Carpet Solutions"] },
-    ],
-  },
-  {
-    id: "outdoor",
-    number: "02",
-    title: "OUTDOOR FLOORING & DECKING",
-    sub: [
-      { items: ["WPC Decking", "Solid Wood Decking", "Thermowood Decking", "Outdoor Flooring", "Exterior Cladding", "Project-Specific Outdoor Solutions"] },
-    ],
-  },
-  {
-    id: "wall",
-    number: "03",
-    title: "WALL & ARCHITECTURAL FINISHES",
-    sub: [
-      { items: ["WPC Wall Panels", "Fluted Wall Panels", "Decorative Wall Panels", "Microcement", "Mosaics", "Pool Finishes", "Project-Specific Wall & Architectural Solutions"] },
-    ],
-  },
-  {
-    id: "architectural",
-    number: "04",
-    title: "ARCHITECTURAL & FINISHING MATERIALS",
-    sub: [
-      { items: ["Clay Roof Tiles", "Synthetic Thatch", "Natural Thatch & Natural Finishes", "Shingles", "Wooden Blinds", "Basins", "Bathtubs", "Stone Sculptures", "Architectural Elements"] },
-    ],
-  },
-  {
-    id: "custom",
-    number: "05",
-    title: "CUSTOM & PROJECT-SPECIFIC SOLUTIONS",
-    sub: [
-      { items: ["CUSTOM DESIGN", "CUSTOM FINISH", "CUSTOM DIMENSIONS", "MATERIAL SELECTION", "PRODUCT CONSTRUCTION", "PERFORMANCE REQUIREMENTS", "PROJECT QUANTITIES"] },
-    ],
-    note: "The product is selected around the project — not the project around the product.",
-  },
+/* Gallery rhythm: wide, tall, tall, wide … so ten plates read as spreads. */
+const rhythm = [
+  { wrap: "md:col-span-7", plate: "aspect-[4/3]" },
+  { wrap: "md:col-span-5 md:mt-32", plate: "aspect-[4/5]" },
+  { wrap: "md:col-span-5", plate: "aspect-[4/5]" },
+  { wrap: "md:col-span-6 md:col-start-7 md:mt-24", plate: "aspect-[4/3]" }
 ];
 
 export default function ProductsPage() {
-
   return (
     <main className="bg-ivory text-charcoal">
       <Header variant="light" />
 
-      <section className="px-5 pb-12 pt-10 md:px-8 md:pb-16 md:pt-14 lg:px-10">
-        <div className="max-w-4xl">
-          <p className="mb-4 text-[11px] uppercase tracking-[0.28em] text-bronze">ALL COLLECTIONS</p>
-          <h1 className="font-serif text-[clamp(2.4rem,5vw,3.6rem)] font-medium leading-[0.92] tracking-[-0.03em]">Material collections for resolved spaces.</h1>
-          <p className="mt-5 max-w-2xl text-sm leading-relaxed text-charcoal/70 md:mt-6">TerraNova works across a focused range of finishing-material categories, sourcing from specialised manufacturing partners across multiple countries. Our product approach is project-led: we evaluate specification, quantity, design and commercial objectives before identifying the right sourcing route.</p>
+      <PageHero
+        label="All collections"
+        lines={["Material collections", "for resolved spaces."]}
+        aside={
+          <p className="t-body">
+            TerraNova works across a focused range of finishing-material categories, sourcing from specialised manufacturing partners across multiple countries. Our product approach is project-led: we evaluate specification, quantity, design and commercial objectives before identifying the right sourcing route.
+          </p>
+        }
+      />
+
+      {/* Index — hover a row to preview the material */}
+      <section className="frame pb-24 md:pb-36">
+        <HoverList
+          items={collections.map((c) => ({
+            href: `/products/${c.slug}`,
+            title: c.name,
+            image: c.image,
+            meta: c.subCollections.slice(0, 3).join(", "),
+            aside: c.subCollections.length ? `${c.subCollections.length} ranges` : undefined
+          }))}
+        />
+      </section>
+
+      {/* Gallery */}
+      <section className="bg-paper">
+        <div className="frame spread">
+          <div className="grid-12 gap-y-20 md:gap-y-28">
+            {collections.map((c, i) => {
+              const r = rhythm[i % rhythm.length];
+              return (
+                <Link key={c.slug} href={`/products/${c.slug}`} data-cursor="Explore" className={`group col-span-12 block ${r.wrap}`}>
+                  <ClipImage src={c.image} alt={`${c.name} material collection`} className={r.plate} sizes="(min-width: 768px) 55vw, 100vw" from={i % 2 ? "right" : "left"} />
+                  <div className="mt-6 flex items-start justify-between gap-6">
+                    <div className="flex items-baseline gap-5">
+                      <span className="numeral text-2xl text-bronze">{String(i + 1).padStart(2, "0")}</span>
+                      <div>
+                        <h2 className="t-h2 transition-colors duration-500 group-hover:text-bronze">{c.name}</h2>
+                        <p className="t-body mt-3 max-w-md text-[0.92rem]">{c.detail}</p>
+                      </div>
+                    </div>
+                    <span className="mt-2 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-charcoal/20 transition-all duration-500 group-hover:border-bronze group-hover:bg-bronze group-hover:text-ivory">
+                      <ArrowUpRight size={16} />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
-      <section className="px-5 py-10 md:px-8 lg:px-10">
-        <ProductsGridClient />
-
-        <div className="px-0 pt-10 md:px-0 lg:px-0">
-          {/* ONE PROJECT. MULTIPLE POSSIBILITIES */}
-          <section className="border-t border-charcoal/12 py-10">
-            <h3 className="font-serif text-[clamp(2rem,3vw,3rem)] leading-[1.05] tracking-[-0.03em]">One Project. Multiple Possibilities.</h3>
-            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-charcoal/70 md:text-[15px]">A project may require one product or a combination of categories. TerraNova evaluates requirements across products, factories and countries to determine the most appropriate sourcing solution.</p>
-            <div className="mt-6">
-              <Link href="/contact-us?open=1" className="inline-flex items-center gap-3 border border-charcoal px-7 py-3.5 text-[12px] uppercase tracking-[0.14em] transition hover:bg-charcoal hover:text-ivory">TELL US WHAT THE PROJECT NEEDS → <ArrowRight size={14} /></Link>
+      <section className="on-dark bg-charcoal text-ivory">
+        <div className="frame spread grid-12 gap-y-12">
+          <div className="col-span-12 md:col-span-3"><Reveal><RunHead n="ii">Collection</RunHead></Reveal></div>
+          <div className="col-span-12 md:col-span-9">
+            <h2 className="t-display"><SplitText text={["One Project.", "Multiple Possibilities."]} lineClassName="[&:nth-child(2)]:italic [&:nth-child(2)]:text-sand" /></h2>
+            <div className="mt-12 flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
+              <Reveal>
+                <p className="t-body measure">
+                  A project may require one product or a combination of categories. TerraNova evaluates requirements across products, factories and countries to determine the most appropriate sourcing solution.
+                </p>
+              </Reveal>
+              <Magnetic>
+                <Link href="/contact-us?open=1" className="btn btn--light rounded-full !px-7">
+                  Tell us what the project needs <ArrowUpRight size={16} />
+                </Link>
+              </Magnetic>
             </div>
-          </section>
+          </div>
         </div>
       </section>
 

@@ -1,9 +1,16 @@
 import type { Config } from "tailwindcss";
 
+/*
+ * Terra Nova brand kit — unchanged from the live site.
+ * ivory / charcoal / sand / bronze / stone, Cormorant Garamond + Inter.
+ */
+// Absolute, forward-slash globs so the config works whatever the cwd.
+const root = __dirname.split("\\").join("/");
+
 const config: Config = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}"
+    `${root}/app/**/*.{js,ts,jsx,tsx,mdx}`,
+    `${root}/components/**/*.{js,ts,jsx,tsx,mdx}`
   ],
   theme: {
     extend: {
@@ -12,7 +19,8 @@ const config: Config = {
         charcoal: "#111111",
         sand: "#D9CFC2",
         bronze: "#A67C52",
-        stone: "#8B8B8B"
+        stone: "#8B8B8B",
+        paper: "#EFE9E0"
       },
       fontFamily: {
         serif: ["var(--font-cormorant)", "Cormorant Garamond", "serif"],
@@ -20,9 +28,6 @@ const config: Config = {
       },
       transitionTimingFunction: {
         luxury: "cubic-bezier(0.16, 1, 0.3, 1)"
-      },
-      letterSpacing: {
-        editorial: "0.04em"
       }
     }
   },

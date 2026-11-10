@@ -2,391 +2,446 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Globe2, Send } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { collections, heroImage, projects } from "@/lib/content";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { RunHead } from "@/components/Editorial";
+import { useIntroDelay } from "@/components/PageTransition";
+import { Chapter, RouteCanvas } from "@/components/Route";
+import { KineticRows, PinnedProjects } from "@/components/Kinetic";
+import SourcingPlot from "@/components/SourcingPlot";
+import {
+  ClipImage,
+  Counter,
+  HorizontalScroll,
+  Magnetic,
+  Reveal,
+  ScrollWords,
+  SplitText,
+  StackCards,
+  ease
+} from "@/components/motion";
 
-const fadeUp = {
-  initial: { opacity: 0, y: 42 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 1.15, ease: [0.16, 1, 0.3, 1] }
-};
+const lineage = [
+  ["01", "GS Stones", "Bringing international products to Indian projects."],
+  ["02", "GS Woods", "Sourcing and developing products around specific project requirements."],
+  ["03", "TerraNova", "Making project procurement our business."]
+];
+
+const network = [
+  ["Multiple Products", "Flooring, carpets, decking and selected architectural and finishing materials."],
+  ["Multiple Factories", "Specialised manufacturing partners selected according to product, specification, quantity and quality requirements."],
+  ["Multiple Countries", "Sourcing experience across 12+ countries, including China, Indonesia, Vietnam, Malaysia, Thailand and selected European markets."]
+];
+
+const priorities = [
+  { kicker: "01", title: "Design Intent", body: "Understanding and preserving the design vision of the architect and designer." },
+  { kicker: "02", title: "Technical Requirements", body: "Meeting specified technical parameters, quality standards and performance requirements of the project team and PMC." },
+  { kicker: "03", title: "Project Economics", body: "Working towards the commercial objectives of the project, including CapEx optimisation and overall project viability." }
+];
+
+const scope = [
+  "Sourcing",
+  "OEM & Custom Manufacturing",
+  "Production",
+  "Quality Control",
+  "International Procurement",
+  "Import & Logistics",
+  "Project Supply",
+  "Installation & Execution"
+];
+
+/** A station marker: the route's dot lands just left of this running head. */
+function Station({ name, n, children }: { name: string; n: string; children: React.ReactNode }) {
+  return (
+    <div data-route-stop={name}>
+      <RunHead n={n}>
+        <span className="text-bronze">{name}</span>
+        <span className="mx-2 opacity-40">/</span>
+        {children}
+      </RunHead>
+    </div>
+  );
+}
+
+function ScopeLine({ step, i }: { step: string; i: number }) {
+  const ref = useRef<HTMLLIElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.95", "start 0.55"] });
+  const o = useTransform(scrollYProgress, [0, 1], [0.12, 1]);
+  const x = useTransform(scrollYProgress, [0, 1], ["4%", "0%"]);
+  return (
+    <motion.li
+      ref={ref}
+      style={reduce ? undefined : { opacity: o, x }}
+      className="group flex items-baseline gap-5 border-b border-charcoal/12 py-3 md:gap-10 md:py-4"
+    >
+      <span className="numeral w-10 shrink-0 text-xl text-bronze md:w-16 md:text-3xl">{String(i + 1).padStart(2, "0")}</span>
+      <span className="font-serif text-[clamp(1.9rem,5.6vw,5.4rem)] leading-[1] tracking-[-0.025em] transition-[font-style,transform] duration-500 group-hover:translate-x-3 group-hover:italic">
+        {step}
+      </span>
+    </motion.li>
+  );
+}
 
 export default function Home() {
-  const shouldReduceMotion = useReducedMotion();
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 900], [0, shouldReduceMotion ? 0 : 72]);
-  const heroScale = useTransform(scrollY, [0, 900], [1.04, shouldReduceMotion ? 1.04 : 1.09]);
+  const reduce = useReducedMotion();
+  const intro = useIntroDelay();
+  const hero = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: hero, offset: ["start start", "end start"] });
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1, 1.22]);
+  const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "12%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-45%"]);
+  const fade = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  const veil = useTransform(scrollYProgress, [0, 1], [0, 0.6]);
 
   return (
-    <main className="overflow-hidden bg-ivory text-charcoal">
-      <section className="relative min-h-screen overflow-hidden bg-charcoal text-ivory">
+    <main className="bg-ivory text-charcoal">
+      <Header variant="dark" />
+
+      {/* ═══ Hero ════════════════════════════════════════════ */}
+      <section ref={hero} className="relative h-[100svh] min-h-[640px] overflow-hidden bg-charcoal text-ivory">
         <motion.div
           className="absolute inset-0"
-          style={{ y: heroY, scale: heroScale }}
+          initial={reduce ? false : { clipPath: "inset(14% 22% 14% 22%)" }}
+          animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+          transition={{ duration: 1.8, ease: [0.76, 0, 0.24, 1], delay: Math.max(0, intro - 0.55) }}
         >
-          <Image
-            src={heroImage}
-            alt="Refined architectural interior with stone and warm light"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        </motion.div>
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,17,17,0.76),rgba(17,17,17,0.22)_48%,rgba(17,17,17,0.52)),linear-gradient(180deg,rgba(17,17,17,0.15),rgba(17,17,17,0.76))]" />
-
-        <Header variant="dark" />
-
-        <div className="relative z-10 flex min-h-[calc(100vh-88px)] items-end px-5 pb-10 md:px-12 md:pb-16 lg:px-16">
-          <motion.div
-            initial={{ opacity: 0, y: 52 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.25, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-5xl"
-          >
-            <p className="mb-5 max-w-xs text-[10px] uppercase leading-5 tracking-[0.26em] text-sand md:mb-7 md:max-w-none md:text-[11px]">
-              Global luxury sourcing and materials studio
-            </p>
-            <h1 className="max-w-5xl font-serif text-[clamp(3.15rem,8.4vw,9.6rem)] font-medium leading-[0.86] tracking-normal">
-              25+ Years of Global Sourcing.
-              <span className="block">Now, Built Around Your Project.</span>
-            </h1>
-            <div className="mt-9 flex max-w-3xl flex-col gap-7 md:flex-row md:items-end md:justify-between">
-              <p className="max-w-xl text-base leading-8 text-ivory/78 md:text-lg">
-                For more than 25 years, we have been buying, sourcing and importing finishing materials for projects across India and overseas.
-              </p>
-              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap">
-                <Link className="group inline-flex items-center justify-between gap-3 border border-ivory/80 px-5 py-4 text-[11px] uppercase tracking-[0.2em] transition-all duration-500 ease-luxury hover:bg-ivory hover:text-charcoal md:px-6" href="/contact-us">
-                  Discuss Your Project
-                  <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </Link>
-                <Link className="group inline-flex items-center justify-between gap-3 border border-ivory/25 px-5 py-4 text-[11px] uppercase tracking-[0.2em] text-ivory/82 transition-all duration-500 ease-luxury hover:border-ivory hover:text-ivory md:px-6" href="/projects">
-                  View Projects
-                  <ArrowUpRight size={15} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </Link>
-              </div>
-            </div>
+          <motion.div className="absolute inset-0" style={reduce ? undefined : { scale: imgScale, y: imgY }}>
+            <motion.div
+              className="absolute inset-0"
+              initial={reduce ? false : { scale: 1.35 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 2.6, ease, delay: Math.max(0, intro - 0.55) }}
+            >
+              <Image src={heroImage} alt="Refined architectural interior with stone and warm light" fill priority sizes="100vw" className="object-cover" />
+            </motion.div>
           </motion.div>
-        </div>
-      </section>
-
-      <section className="px-5 py-16 md:px-12 md:py-24 lg:px-16">
-        <motion.div {...fadeUp} className="mx-auto max-w-5xl text-center">
-          <p className="mb-8 text-[11px] uppercase tracking-[0.28em] text-bronze">
-            Material intelligence
-          </p>
-          <h2 className="font-serif text-[clamp(3.2rem,7vw,8.4rem)] font-medium leading-[0.9] tracking-normal">
-            Materials shape atmosphere, emotion, and identity.
-          </h2>
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(17,17,17,0.62)_0%,rgba(17,17,17,0.22)_32%,rgba(17,17,17,0.42)_62%,rgba(17,17,17,0.9)_100%)]" />
+          <motion.div className="absolute inset-0 bg-charcoal" style={{ opacity: veil }} />
         </motion.div>
-      </section>
 
-      <section id="studio" className="px-5 pb-16 md:px-12 md:pb-24 lg:px-16">
-        <div className="grid gap-8 lg:grid-cols-[0.94fr_1.06fr] lg:items-center">
-          <motion.div {...fadeUp} className="relative min-h-[360px] overflow-hidden md:min-h-[480px]">
-            <Image
-              src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1500&q=88"
-              alt="Luxury interior architectural detail"
-              fill
-              sizes="(min-width: 1024px) 46vw, 100vw"
-              className="object-cover transition-transform duration-[1800ms] ease-luxury hover:scale-105"
+        <motion.div className="frame relative z-10 flex h-full flex-col justify-end pb-10 md:pb-14" style={reduce ? undefined : { y: textY, opacity: fade }}>
+          <motion.p
+            className="t-small mb-6 flex items-center gap-3 text-sand md:mb-8"
+            initial={reduce ? false : { opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease, delay: intro + 0.2 }}
+          >
+            <span className="h-px w-10 bg-sand/70" /> Global luxury sourcing and materials studio
+          </motion.p>
+
+          <h1 className="font-serif text-[clamp(3rem,8.6vw,10rem)] font-normal leading-[0.86] tracking-[-0.03em]">
+            <SplitText
+              immediate
+              delay={intro + 0.1}
+              text={["25+ Years of Global Sourcing.", "Now, Built Around Your Project."]}
+              lineClassName="[&:nth-child(2)]:md:pl-[12%] [&:nth-child(2)]:italic"
             />
-          </motion.div>
-          <motion.div {...fadeUp} className="lg:pl-10">
-            <p className="mb-7 text-[11px] uppercase tracking-[0.28em] text-bronze">
-              About Terra Nova
-            </p>
-            <h2 className="max-w-3xl font-serif text-[clamp(3rem,5vw,6.8rem)] font-medium leading-[0.92] tracking-normal">
-              We don&apos;t sell what we have. We source what the project needs.
-            </h2>
-            <p className="mt-7 max-w-xl text-base leading-8 text-charcoal/64">
-              TerraNova Finishing Materials is a dedicated platform for strategic project sourcing and procurement. We begin with the project requirement and work backwards to identify the appropriate product, manufacturing partner, country of origin and procurement route.
-            </p>
+          </h1>
 
-            <div className="tn-timeline mt-9 grid border-y border-charcoal/12 py-6 sm:grid-cols-3 sm:gap-0">
-              {[
-                ["01", "GS Stones", "Bringing international products to Indian projects."],
-                ["02", "GS Woods", "Sourcing and developing products around specific project requirements."],
-                ["03", "TerraNova", "Making project procurement our business."]
-              ].map(([number, title, copy], index) => (
-                <motion.div
-                  key={title}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-10%" }}
-                  transition={{ duration: 0.7, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="tn-timeline-item relative py-4 sm:px-5 sm:py-0 first:sm:pl-0 last:sm:pr-0"
-                >
-                  <span className="mb-5 block text-[10px] tracking-[0.2em] text-stone">{number}</span>
-                  <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bronze">{title}</h4>
-                  <p className="mt-2 max-w-[15rem] text-sm leading-6 text-charcoal/68">{copy}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="mt-7 flex flex-wrap items-center justify-between gap-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-bronze">Start with one requirement. Grow with the project.</p>
-              <Link href="/about-us" className="group inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-charcoal transition-colors hover:text-bronze">Explore About Us <ArrowUpRight size={14} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" /></Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="collections" className="bg-sand/38 px-5 py-16 md:px-12 md:py-28 lg:px-16">
-        <motion.div {...fadeUp} className="mb-10">
-          <p className="mb-6 text-[11px] uppercase tracking-[0.28em] text-bronze">
-            Our sourcing network
-          </p>
-          <h2 className="max-w-4xl font-serif text-[clamp(3.4rem,6vw,7.4rem)] font-medium leading-[0.9] tracking-normal">
-            Multi-Product. Multi-Factory. Multi-Country.
-          </h2>
-          <p className="mt-6 max-w-3xl text-base leading-8 text-charcoal/60">
-            Our sourcing network enables us to evaluate manufacturing partners and sourcing markets based on the requirements of each project. The objective is not simply to find a supplier. It is to build the right procurement solution for the project.
-          </p>
-          <div className="mt-10 grid gap-8 border-t border-charcoal/12 pt-8 sm:grid-cols-3">
-            <div className="tn-network-item group">
-              <h4 className="text-[11px] uppercase tracking-[0.22em] text-bronze font-semibold">Multiple Products</h4>
-              <p className="mt-3 text-sm leading-6 text-charcoal/64">Flooring, carpets, decking and selected architectural and finishing materials.</p>
-            </div>
-            <div className="tn-network-item group">
-              <h4 className="text-[11px] uppercase tracking-[0.22em] text-bronze font-semibold">Multiple Factories</h4>
-              <p className="mt-3 text-sm leading-6 text-charcoal/64">Specialised manufacturing partners selected according to product, specification, quantity and quality requirements.</p>
-            </div>
-            <div className="tn-network-item group">
-              <h4 className="text-[11px] uppercase tracking-[0.22em] text-bronze font-semibold">Multiple Countries</h4>
-              <p className="mt-3 text-sm leading-6 text-charcoal/64">Sourcing experience across 12+ countries, including China, Indonesia, Vietnam, Malaysia, Thailand and selected European markets.</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
-          {collections.slice(0, 5).map((collection) => (
-            <motion.div
-              key={collection.name}
-              {...fadeUp}
-              className="group relative min-h-[390px] overflow-hidden bg-charcoal text-left sm:min-h-[430px] xl:min-h-[520px]"
-            >
-              <Link
-                href={`/products/${collection.slug}`}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={collection.image}
-                  alt={`${collection.name} material atmosphere`}
-                  fill
-                  sizes="(min-width: 768px) 33vw, 100vw"
-                  className="object-cover opacity-[0.88] transition-transform duration-[1800ms] ease-luxury group-hover:scale-[1.08]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/72 via-charcoal/12 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-5 p-6 md:p-9">
-                  <div>
-                    <p className="mb-3 text-[10px] uppercase tracking-[0.26em] text-sand">
-                      Collection
-                    </p>
-                    <h3 className="font-serif text-4xl font-medium text-ivory md:text-5xl">
-                      {collection.name}
-                    </h3>
-                  </div>
-                  <ArrowUpRight className="text-ivory/70 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-        <motion.div {...fadeUp} className="mt-10 flex justify-center">
-          <Link
-            href="/products"
-            className="group relative isolate inline-flex items-center gap-3 overflow-hidden border border-charcoal px-7 py-4 text-[11px] uppercase tracking-[0.22em] transition-all duration-700 ease-luxury before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:bg-charcoal before:transition-transform before:duration-700 before:ease-luxury hover:-translate-y-0.5 hover:text-ivory hover:before:scale-x-100"
+          <motion.div
+            className="mt-10 grid gap-8 border-t border-ivory/20 pt-8 md:grid-cols-12 md:items-end"
+            initial={reduce ? false : { opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease, delay: intro + 0.8 }}
           >
-            View All Collections
-            <ArrowUpRight size={15} className="transition-transform duration-700 ease-luxury group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </Link>
-        </motion.div>
-      </section>
-
-      <section id="projects" className="px-5 py-16 md:px-12 md:py-28 lg:px-16">
-        <motion.div {...fadeUp} className="mb-10 max-w-5xl">
-          <p className="mb-6 text-[11px] uppercase tracking-[0.28em] text-bronze">
-            Featured projects
-          </p>
-          <h2 className="font-serif text-[clamp(3.4rem,7vw,8rem)] font-medium leading-[0.9] tracking-normal">
-            Some of Our Projects
-          </h2>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-charcoal/60">
-            Featured work across Grand Hyatt Goa, Taj Convention Goa, Cheval Blanc Maldives, Piramal Realty Mumbai, Hiranandani, Kalpataru, Awfis (Multiple Locations), and many more projects over 25+ years.
-          </p>
-        </motion.div>
-        <div className="grid items-start gap-x-7 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
-          {projects.slice(0, 6).map((project) => (
-            <motion.div
-              key={project.name}
-              {...fadeUp}
-              className="group text-left"
-            >
-              <Link href={`/projects/${project.slug}`} className="block">
-                <div className="relative h-[420px] overflow-hidden bg-sand md:h-[520px]">
-                  <Image
-                    src={project.image}
-                    alt={`${project.name} architectural project`}
-                    fill
-                    sizes="(min-width: 768px) 58vw, 100vw"
-                    className="object-cover transition-transform duration-[1800ms] ease-luxury group-hover:scale-105"
-                  />
-                </div>
-                <div className="mt-5 flex items-start justify-between gap-4 border-t border-charcoal/12 pt-5">
-                  <h3 className="font-serif text-3xl font-medium transition-transform duration-500 ease-luxury group-hover:translate-x-1 md:text-4xl">
-                    {project.name}
-                  </h3>
-                  <ArrowUpRight size={18} className="mt-1 shrink-0 text-bronze opacity-0 transition-all duration-500 ease-luxury group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:opacity-100" />
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-        <motion.div {...fadeUp} className="mt-10 flex justify-center">
-          <Link
-            href="/projects"
-            className="group relative isolate inline-flex items-center gap-3 overflow-hidden border border-charcoal px-7 py-4 text-[11px] uppercase tracking-[0.22em] transition-all duration-700 ease-luxury before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:bg-charcoal before:transition-transform before:duration-700 before:ease-luxury hover:-translate-y-0.5 hover:text-ivory hover:before:scale-x-100"
-          >
-            View All Projects
-            <ArrowUpRight size={15} className="transition-transform duration-700 ease-luxury group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </Link>
-        </motion.div>
-      </section>
-
-      <section className="relative overflow-hidden bg-charcoal px-5 py-16 text-ivory md:px-12 md:py-28 lg:px-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(166,124,82,0.22),transparent_38%)]" />
-        <div className="relative grid gap-16 lg:grid-cols-[0.75fr_1.25fr] lg:items-center">
-          <motion.div {...fadeUp}>
-            <p className="mb-7 flex items-center gap-3 text-[11px] uppercase tracking-[0.28em] text-sand">
-              <Globe2 size={16} />
-              Global Sourcing
+            <p className="max-w-md text-[1rem] leading-[1.75] text-ivory/80 md:col-span-5">
+              For more than 25 years, we have been buying, sourcing and importing finishing materials for projects across India and overseas.
             </p>
-            <h2 className="font-serif text-[clamp(3.2rem,5.8vw,7.2rem)] font-medium leading-[0.9] tracking-normal">
-              Built Around Three Project Priorities
-            </h2>
-            <p className="mt-8 max-w-md text-base leading-8 text-ivory/62">
-              Every project has different stakeholders and different objectives. Our role is to bring these priorities together through strategic sourcing.
-            </p>
-
-            <div className="mt-10 space-y-3">
-              <div className="tn-priority group py-3">
-                <h4 className="text-[11px] uppercase tracking-[0.22em] text-sand font-semibold">Design Intent</h4>
-                <p className="mt-2 text-sm leading-6 text-ivory/62">Understanding and preserving the design vision of the architect and designer.</p>
-              </div>
-              <div className="tn-priority group border-t border-ivory/10 pt-4">
-                <h4 className="text-[11px] uppercase tracking-[0.22em] text-sand font-semibold">Technical Requirements</h4>
-                <p className="mt-2 text-sm leading-6 text-ivory/62">Meeting specified technical parameters, quality standards and performance requirements of the project team and PMC.</p>
-              </div>
-              <div className="tn-priority group border-t border-ivory/10 pt-4">
-                <h4 className="text-[11px] uppercase tracking-[0.22em] text-sand font-semibold">Project Economics</h4>
-                <p className="mt-2 text-sm leading-6 text-ivory/62">Working towards the commercial objectives of the project, including CapEx optimisation and overall project viability.</p>
-              </div>
+            <div className="flex flex-wrap gap-3 md:col-span-5 md:col-start-7 md:justify-end">
+              <Magnetic>
+                <Link href="/contact-us" className="btn btn--light rounded-full !px-6">
+                  Discuss Your Project <ArrowUpRight size={16} />
+                </Link>
+              </Magnetic>
+              <Magnetic>
+                <Link href="/projects" className="btn btn--outline-light rounded-full !px-6">
+                  View Projects <ArrowUpRight size={16} />
+                </Link>
+              </Magnetic>
             </div>
-          </motion.div>
-          <motion.div {...fadeUp} className="relative min-h-[460px]">
-            <svg viewBox="0 0 900 520" className="h-full min-h-[460px] w-full">
-              <path d="M92 245C151 184 205 160 282 176C350 190 364 127 437 137C514 148 554 207 641 172C720 140 769 176 817 231" fill="none" stroke="rgba(245,241,235,0.14)" strokeWidth="1" />
-              <path d="M152 330C241 281 318 322 400 291C474 263 505 309 584 293C662 278 702 326 790 307" fill="none" stroke="rgba(245,241,235,0.12)" strokeWidth="1" />
-              <path className="map-line" d="M166 264C312 153 469 163 725 252" fill="none" stroke="#A67C52" strokeWidth="1.4" />
-              <path className="map-line" d="M228 330C384 231 523 246 760 185" fill="none" stroke="#D9CFC2" strokeWidth="1.1" />
-              <path className="map-line" d="M126 210C279 305 487 357 814 297" fill="none" stroke="#8B8B8B" strokeWidth="1" />
-              {[
-                [166, 264],
-                [312, 153],
-                [469, 163],
-                [725, 252],
-                [228, 330],
-                [760, 185],
-                [814, 297]
-              ].map(([cx, cy]) => (
-                <g key={`${cx}-${cy}`}>
-                  <circle cx={cx} cy={cy} r="4" fill="#F5F1EB" />
-                  <circle cx={cx} cy={cy} r="16" fill="none" stroke="rgba(166,124,82,0.34)" />
-                </g>
-              ))}
-            </svg>
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="px-5 py-16 md:px-12 md:py-28 lg:px-16">
-        <motion.div {...fadeUp} className="mx-auto max-w-6xl">
-          <p className="mb-6 text-[11px] uppercase tracking-[0.28em] text-bronze">
-            Procurement Scope
-          </p>
-          <h2 className="font-serif text-[clamp(3rem,6vw,7.2rem)] font-medium leading-[0.9] tracking-normal mb-8">
-            From Source to Project
-          </h2>
-          <p className="max-w-2xl text-base leading-8 text-charcoal/70 mb-12">
-            Our involvement can extend across the complete procurement journey. The scope depends on the requirement. You may need us for one stage or the complete journey.
-          </p>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-charcoal/10 pt-8 sm:grid-cols-4 lg:grid-cols-8">
-            {[
-              { step: "01", name: "Sourcing" },
-              { step: "02", name: "OEM & Custom Manufacturing" },
-              { step: "03", name: "Production" },
-              { step: "04", name: "Quality Control" },
-              { step: "05", name: "International Procurement" },
-              { step: "06", name: "Import & Logistics" },
-              { step: "07", name: "Project Supply" },
-              { step: "08", name: "Installation & Execution" }
-            ].map((item, index) => (
-              <div key={item.name} className="tn-process-item group relative py-3">
-                <p className="font-serif text-lg text-bronze leading-none mb-3">{item.step}</p>
-                <h4 className="text-[11px] uppercase tracking-[0.16em] leading-normal font-semibold text-charcoal">
-                  {item.name}
-                </h4>
-                {index < 7 && (
-                  <span className="hidden lg:block absolute right-2 top-0 text-charcoal/20 font-light">→</span>
-                )}
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
-
-      <section id="contact" className="bg-sand/40 px-5 py-16 md:px-12 md:py-28 lg:px-16">
-        <div className="grid gap-14 lg:grid-cols-[0.82fr_1.18fr]">
-          <motion.div {...fadeUp}>
-            <p className="mb-7 text-[11px] uppercase tracking-[0.28em] text-bronze">
-              Contact
-            </p>
-            <h2 className="font-serif text-[clamp(3.4rem,6vw,7.2rem)] font-medium leading-[0.9] tracking-normal">
-              Let&apos;s Start With Your Requirement
-            </h2>
-            <p className="mt-7 max-w-md text-base leading-8 text-charcoal/62">
-              Start with a product requirement, specification, BOQ, drawing, reference or simply a project need.
-            </p>
-          </motion.div>
-          <motion.form {...fadeUp} className="grid gap-5">
-            {["Name", "Email", "Project Location"].map((label) => (
-              <label key={label} className="block">
-                <span className="text-[10px] uppercase tracking-[0.24em] text-stone">
-                  {label}
-                </span>
-                <input className="mt-3 w-full border-0 border-b border-charcoal/22 bg-transparent px-0 py-3 text-lg outline-none transition-all duration-300 focus:border-bronze focus:pl-1" />
-              </label>
-            ))}
-            <label className="block">
-              <span className="text-[10px] uppercase tracking-[0.24em] text-stone">
-                Material Intent
+            <div className="hidden items-center justify-end gap-3 text-xs text-ivory/60 md:col-span-1 md:flex">
+              <span className="relative block h-12 w-px overflow-hidden bg-ivory/20">
+                <span className="scroll-cue absolute inset-0 bg-ivory" />
               </span>
-              <textarea rows={3} className="mt-3 w-full resize-none border-0 border-b border-charcoal/22 bg-transparent px-0 py-3 text-lg outline-none transition-all duration-300 focus:border-bronze focus:pl-1" />
-            </label>
-            <button className="mt-4 inline-flex w-fit items-center gap-3 border border-charcoal px-7 py-4 text-[11px] uppercase tracking-[0.22em] transition-all duration-500 ease-luxury hover:bg-charcoal hover:text-ivory">
-              Send Inquiry
-              <Send size={15} />
-            </button>
-          </motion.form>
+              <ArrowDown size={14} />
+            </div>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      <RouteCanvas>
+        {/* ═══ 01 Requirement ═══════════════════════════════ */}
+        <Chapter>
+          <div className="frame spread">
+            <Station name="Requirement" n="01">Material intelligence</Station>
+            <ScrollWords
+              text="Materials shape atmosphere, emotion, and identity."
+              className="mt-10 max-w-[14ch] font-serif text-[clamp(3.2rem,9.4vw,10.5rem)] leading-[0.86] tracking-[-0.035em] md:ml-[8.33%]"
+            />
+
+            <div className="grid-12 mt-24 gap-y-16 md:mt-36">
+              <div className="relative col-span-12 md:col-span-6">
+                <ClipImage
+                  src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1500&q=88"
+                  alt="Luxury interior architectural detail"
+                  className="aspect-[4/5] w-[84%]"
+                  sizes="(min-width: 768px) 45vw, 90vw"
+                  parallax={12}
+                />
+                <ClipImage
+                  src={collections[8].image}
+                  alt="Marbles and stones material detail"
+                  className="absolute -bottom-14 right-0 aspect-[3/4] w-[44%] border-[10px] border-ivory"
+                  sizes="(min-width: 768px) 20vw, 40vw"
+                  parallax={26}
+                  from="right"
+                  delay={0.25}
+                />
+              </div>
+              <div className="col-span-12 pt-8 md:col-span-5 md:col-start-8 md:pt-24">
+                <p className="t-small text-charcoal/55">About Terra Nova</p>
+                <h2 className="t-h1 mt-6">
+                  <SplitText text="We don't sell what we have. We source what the project needs." stagger={0.035} />
+                </h2>
+                <Reveal delay={0.15}>
+                  <p className="t-body mt-8">
+                    TerraNova Finishing Materials is a dedicated platform for strategic project sourcing and procurement. We begin with the project requirement and work backwards to identify the appropriate product, manufacturing partner, country of origin and procurement route.
+                  </p>
+                </Reveal>
+              </div>
+            </div>
+
+            {/* Lineage */}
+            <div className="mt-40 md:mt-60">
+              <ol className="grid gap-12 md:grid-cols-3 md:gap-8">
+                {lineage.map(([n, name, copy], i) => (
+                  <Reveal key={name} as="li" delay={i * 0.12} className="border-t border-charcoal/15 pt-6">
+                    <span className="numeral block text-[clamp(4rem,7vw,7rem)] leading-[0.8] text-bronze/85">{n}</span>
+                    <h3 className="t-h2 mt-6">{name}</h3>
+                    <p className="t-body mt-3 max-w-xs">{copy}</p>
+                  </Reveal>
+                ))}
+              </ol>
+              <Reveal className="mt-16 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <p className="font-serif text-[clamp(1.6rem,2.6vw,2.4rem)] italic leading-snug">Start with one requirement. Grow with the project.</p>
+                <Link href="/about-us" className="link-u w-fit">
+                  Explore About Us <ArrowUpRight size={14} />
+                </Link>
+              </Reveal>
+            </div>
+          </div>
+        </Chapter>
+
+        {/* ═══ 02 Source country ════════════════════════════ */}
+        <Chapter tone="paper">
+          <div className="frame pt-24 md:pt-36">
+            <Station name="Source country" n="02">Our sourcing network</Station>
+          </div>
+          <KineticRows
+            className="mt-10 font-serif leading-[0.92] tracking-[-0.035em]"
+            rows={[
+              { text: "Multi-Product. Multi-Factory.", className: "text-[clamp(3.4rem,11vw,12rem)]" },
+              { text: "Multi-Country. Multi-Product.", className: "text-[clamp(3.4rem,11vw,12rem)] italic text-bronze" }
+            ]}
+          />
+          <div className="frame pb-24 md:pb-36">
+            <div className="grid-12 mt-16 gap-y-12 md:mt-24">
+              <div className="col-span-12 md:col-span-4">
+                <Reveal>
+                  <p className="t-body">
+                    Our sourcing network enables us to evaluate manufacturing partners and sourcing markets based on the requirements of each project. The objective is not simply to find a supplier. It is to build the right procurement solution for the project.
+                  </p>
+                </Reveal>
+                <div className="mt-12 grid grid-cols-2 gap-6 border-t border-charcoal/15 pt-8">
+                  <div>
+                    <p className="font-serif text-[clamp(4rem,7vw,7rem)] leading-[0.8] tracking-[-0.04em] text-bronze"><Counter to={25} suffix="+" /></p>
+                    <p className="t-small mt-3 text-charcoal/60">Years of global sourcing</p>
+                  </div>
+                  <div>
+                    <p className="font-serif text-[clamp(4rem,7vw,7rem)] leading-[0.8] tracking-[-0.04em] text-bronze"><Counter to={12} suffix="+" /></p>
+                    <p className="t-small mt-3 text-charcoal/60">Countries</p>
+                  </div>
+                </div>
+              </div>
+              <Reveal className="col-span-12 md:col-span-8" y={50}>
+                <figure className="bg-ivory/70 p-4 md:p-6">
+                  <SourcingPlot />
+                  <figcaption className="t-small mt-3 border-t border-charcoal/12 pt-3 text-charcoal/60">
+                    Named sourcing markets shown. Sourcing experience spans 12+ countries in total.
+                  </figcaption>
+                </figure>
+              </Reveal>
+            </div>
+            <ol className="mt-16 grid gap-10 border-t border-charcoal/15 pt-10 md:grid-cols-3 md:gap-8">
+              {network.map(([name, copy], i) => (
+                <Reveal key={name} as="li" delay={i * 0.1}>
+                  <h3 className="t-h3">{name}</h3>
+                  <p className="t-body mt-3 text-[0.95rem]">{copy}</p>
+                </Reveal>
+              ))}
+            </ol>
+          </div>
+        </Chapter>
+
+        {/* ═══ 03 Factory — pinned collections ═════════════ */}
+        <Chapter tone="paper">
+          <div className="frame pb-4 pt-8">
+            <Station name="Factory" n="03">Collection</Station>
+          </div>
+          <div className="bg-paper">
+            <HorizontalScroll className="items-stretch gap-6 px-[var(--gutter)] md:gap-8">
+              <div className="flex w-[80vw] shrink-0 flex-col justify-between pr-6 sm:w-[46vw] lg:w-[32vw]">
+                <h2 className="t-display">Material collections for resolved spaces.</h2>
+                <Link href="/products" className="link-u mt-10 w-fit">
+                  View All Collections <ArrowUpRight size={14} />
+                </Link>
+              </div>
+              {collections.map((c, i) => (
+                <Link
+                  key={c.slug}
+                  href={`/products/${c.slug}`}
+                  data-cursor="Explore"
+                  className={`group relative block w-[78vw] shrink-0 sm:w-[46vw] lg:w-[26vw] ${i % 2 ? "lg:mt-20" : ""}`}
+                >
+                  <div className="relative h-[52vh] overflow-hidden bg-sand md:h-[58vh]">
+                    <Image
+                      src={c.image}
+                      alt={`${c.name} material atmosphere`}
+                      fill
+                      sizes="(min-width: 1024px) 26vw, 78vw"
+                      loading="eager"
+                      className="object-cover transition-transform duration-[1.6s] ease-luxury group-hover:scale-[1.08]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal/75 via-charcoal/5 to-transparent opacity-70 transition-opacity duration-700 group-hover:opacity-100" />
+                    <span className="numeral absolute left-5 top-4 text-2xl text-ivory/90">{String(i + 1).padStart(2, "0")}</span>
+                    {c.subCollections.length > 0 && (
+                      <ul className="absolute inset-x-5 bottom-5 translate-y-4 space-y-1 text-[0.8rem] text-ivory/90 opacity-0 transition-all duration-700 ease-luxury group-hover:translate-y-0 group-hover:opacity-100">
+                        {c.subCollections.slice(0, 4).map((s) => <li key={s}>{s}</li>)}
+                      </ul>
+                    )}
+                  </div>
+                  <div className="mt-5 flex items-baseline justify-between gap-4">
+                    <h3 className="t-h3">{c.name}</h3>
+                    <ArrowUpRight size={18} className="shrink-0 text-bronze transition-transform duration-500 group-hover:-translate-y-1 group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              ))}
+            </HorizontalScroll>
+          </div>
+        </Chapter>
+
+        {/* ═══ 04 QC — the three priorities ═════════════════ */}
+        <Chapter tone="dark" open>
+          <div className="frame grid-12 gap-y-14 py-28 md:py-40">
+            <div className="col-span-12 md:col-span-5">
+              <div className="md:sticky md:top-[16vh]">
+                <Station name="Quality control" n="04">Global Sourcing</Station>
+                <h2 className="t-display mt-8"><SplitText text="Built Around Three Project Priorities" /></h2>
+                <Reveal delay={0.2}>
+                  <p className="t-body mt-8 max-w-md">
+                    Every project has different stakeholders and different objectives. Our role is to bring these priorities together through strategic sourcing.
+                  </p>
+                </Reveal>
+              </div>
+            </div>
+            <div className="col-span-12 md:col-span-7">
+              <StackCards cards={priorities} dark />
+            </div>
+          </div>
+        </Chapter>
+
+        {/* ═══ 05 Import — procurement scope ═══════════════ */}
+        <Chapter>
+          <div className="frame spread">
+            <div className="grid-12 gap-y-8">
+              <div className="col-span-12 md:col-span-4">
+                <Station name="Import" n="05">Procurement Scope</Station>
+                <h2 className="t-h1 mt-8"><SplitText text="From Source to Project" /></h2>
+                <Reveal delay={0.15}>
+                  <p className="t-body mt-8">
+                    Our involvement can extend across the complete procurement journey. The scope depends on the requirement. You may need us for one stage or the complete journey.
+                  </p>
+                </Reveal>
+              </div>
+              <ol className="col-span-12 border-t border-charcoal/12 md:col-span-8">
+                {scope.map((s, i) => (
+                  <ScopeLine key={s} step={s} i={i} />
+                ))}
+              </ol>
+            </div>
+          </div>
+        </Chapter>
+
+        {/* ═══ 06 Site — projects ══════════════════════════ */}
+        <Chapter>
+          <div className="frame pb-16 md:pb-24">
+            <Station name="Site" n="06">Featured projects</Station>
+            <div className="grid-12 mt-10 gap-y-8">
+              <h2 className="t-display col-span-12 md:col-span-8"><SplitText text="Some of Our Projects" /></h2>
+              <Reveal className="col-span-12 self-end md:col-span-4">
+                <p className="t-body">
+                  Featured work across Grand Hyatt Goa, Taj Convention Goa, Cheval Blanc Maldives, Piramal Realty Mumbai, Hiranandani, Kalpataru, Awfis (Multiple Locations), and many more projects over 25+ years.
+                </p>
+              </Reveal>
+            </div>
+          </div>
+          <PinnedProjects projects={projects.slice(0, 6)} />
+          <div className="frame flex justify-center py-16">
+            <Magnetic>
+              <Link href="/projects" className="btn btn--ghost rounded-full !px-7">
+                View All Projects <ArrowUpRight size={16} />
+              </Link>
+            </Magnetic>
+          </div>
+        </Chapter>
+      </RouteCanvas>
+
+      {/* ═══ Contact ═════════════════════════════════════════ */}
+      <section id="contact" className="bg-sand/50">
+        <div className="frame grid-12 spread gap-y-14">
+          <div className="col-span-12 md:col-span-5">
+            <RunHead n="07">Contact</RunHead>
+            <h2 className="t-display mt-8"><SplitText text="Let's Start With Your Requirement" /></h2>
+            <Reveal delay={0.2}>
+              <p className="t-body measure mt-8">
+                Start with a product requirement, specification, BOQ, drawing, reference or simply a project need.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal className="col-span-12 md:col-span-6 md:col-start-7 md:pt-4">
+            <form className="grid gap-9">
+              {["Name", "Email", "Project Location"].map((label, i) => (
+                <label key={label} className="block">
+                  <span className="field-label flex items-baseline gap-3">
+                    <span className="numeral text-base text-bronze">{String(i + 1).padStart(2, "0")}</span>
+                    {label}
+                  </span>
+                  <input className="field" type={label === "Email" ? "email" : "text"} name={label.toLowerCase().replace(/\s/g, "-")} />
+                </label>
+              ))}
+              <label className="block">
+                <span className="field-label flex items-baseline gap-3">
+                  <span className="numeral text-base text-bronze">04</span>
+                  Material Intent
+                </span>
+                <textarea rows={3} className="field" name="material-intent" />
+              </label>
+              <Magnetic className="mt-2 w-fit">
+                <button type="submit" className="btn rounded-full !px-7">
+                  Send Inquiry <ArrowUpRight size={16} />
+                </button>
+              </Magnetic>
+            </form>
+          </Reveal>
         </div>
       </section>
 
-      <Footer />
+      <Footer cta={false} />
     </main>
   );
 }

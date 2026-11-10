@@ -1,79 +1,118 @@
 "use client";
 
-import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
-import { subcollectionDetails } from "@/lib/content";
+import Link from "next/link";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { collections, subcollectionDetails, type Collection } from "@/lib/content";
+import { RunHead } from "@/components/Editorial";
+import { ClipImage, Reveal, SplitText, Stagger, ease } from "@/components/motion";
+import { useIntroDelay } from "@/components/PageTransition";
 
-export default function CategoryDetailClient({ collection }: { collection: any }) {
-  const shouldReduce = useReducedMotion();
+export default function CategoryDetailClient({ collection }: { collection: Collection }) {
+  const intro = useIntroDelay();
+  const reduce = useReducedMotion();
+  const index = collections.findIndex((c) => c.slug === collection.slug);
+  const next = collections[(index + 1) % collections.length];
 
   return (
-    <div className="px-5 pb-16 md:px-12 lg:px-16">
-      <motion.header initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: shouldReduce ? 0 : 0.6 }} className="mx-auto max-w-6xl">
-        <p className="mb-4 text-[11px] uppercase tracking-[0.28em] text-bronze">{collection.name}</p>
-        <h1 className="font-serif text-[clamp(2rem,4vw,3.2rem)] font-medium">{collection.name}</h1>
-        <p className="mt-4 text-sm text-charcoal/70 max-w-3xl">{collection.detail}</p>
-      </motion.header>
-
-      <div className="mx-auto mt-8 max-w-6xl">
-        {collection.image && (
-          <div className="relative mb-8 h-[340px] md:h-[420px] overflow-hidden rounded-none">
-            <Image src={collection.image} alt={collection.name} fill className="object-cover" />
-          </div>
-        )}
-
-        <motion.section
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: shouldReduce ? 0 : 0.6 }}
+    <>
+      <section className="frame pb-20 pt-8 md:pb-28 md:pt-12">
+        <motion.div
+          initial={reduce ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: intro }}
+          className="flex items-center justify-between"
         >
-          <h2 className="font-serif text-xl">Subcategories</h2>
+          <Link href="/products" className="link-u text-charcoal/65">
+            <ArrowLeft size={14} /> Products
+          </Link>
+          <span className="t-small text-charcoal/50">
+            {String(index + 1).padStart(2, "0")} / {String(collections.length).padStart(2, "0")}
+          </span>
+        </motion.div>
 
-          <div className="mt-8">
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {collection.subCollections && collection.subCollections.map((sub: string) => {
+        <div className="grid-12 mt-12 gap-y-12">
+          <div className="col-span-12 flex flex-col justify-between md:col-span-6">
+            <h1 className="t-display">
+              <SplitText immediate delay={intro + 0.1} text={collection.name} />
+            </h1>
+            <motion.p
+              className="t-lead mt-10 max-w-lg text-charcoal/75"
+              initial={reduce ? false : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease, delay: intro + 0.5 }}
+            >
+              {collection.detail}
+            </motion.p>
+          </div>
+          <ClipImage
+            src={collection.image}
+            alt={collection.name}
+            immediate
+            priority
+            delay={intro + 0.2}
+            className="col-span-12 aspect-[4/3] md:col-span-6 md:aspect-[4/5]"
+            sizes="(min-width: 768px) 50vw, 100vw"
+          />
+        </div>
+      </section>
+
+      {collection.subCollections.length > 0 && (
+        <section className="bg-paper">
+          <div className="frame spread">
+            <div className="grid-12 gap-y-8">
+              <div className="col-span-12 md:col-span-3"><Reveal><RunHead n="ii">{collection.name}</RunHead></Reveal></div>
+              <h2 className="t-h1 col-span-12 md:col-span-9"><SplitText text="Subcategories" /></h2>
+            </div>
+
+            <Stagger className="mt-16 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3 md:mt-20" gap={0.1}>
+              {collection.subCollections.map((sub, i) => {
                 const info = subcollectionDetails[sub] || { image: collection.image, spec: undefined };
-
                 return (
-                  <motion.article
-                    key={sub}
-                    className="group bg-ivory"
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: shouldReduce ? 0 : 0.6 }}
-                    whileHover={shouldReduce ? undefined : { translateY: -6 }}
-                  >
-                    <div className="overflow-hidden">
-                      <div className="relative h-48 md:h-56 w-full transition-transform duration-500 group-hover:scale-105">
-                        <Image src={info.image} alt={sub} fill className="object-cover" />
+                  <article key={sub} className="group">
+                    <div className="relative aspect-[4/5] overflow-hidden bg-sand">
+                      <Image
+                        src={info.image}
+                        alt={sub}
+                        fill
+                        sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover transition-transform duration-[1.6s] ease-luxury group-hover:scale-[1.08]"
+                      />
+                      <span className="numeral absolute left-5 top-4 text-2xl text-ivory">{String(i + 1).padStart(2, "0")}</span>
+                      <div className="absolute inset-x-0 bottom-0 translate-y-full bg-charcoal/90 p-6 text-ivory backdrop-blur-sm transition-transform duration-700 ease-luxury group-hover:translate-y-0">
+                        <p className="text-[0.9rem] leading-[1.7] text-ivory/85">{info.spec ?? "Specification available in product PDF."}</p>
                       </div>
                     </div>
-
-                    <div className="px-4 py-4">
-                      <div className="flex items-center justify-between">
-                        <p className="font-serif text-lg font-medium">{sub}</p>
-                        <motion.span className="ml-3 text-charcoal/70" whileHover={shouldReduce ? undefined : { x: 6 }}>
-                          <ArrowUpRight size={14} />
-                        </motion.span>
-                      </div>
-
-                      {info.spec ? (
-                        <p className="mt-3 text-sm text-charcoal/70">{info.spec}</p>
-                      ) : (
-                        <p className="mt-3 text-sm text-charcoal/50">Specification available in product PDF.</p>
-                      )}
-                    </div>
-                  </motion.article>
+                    <h3 className="t-h3 mt-5">{sub}</h3>
+                    <p className="t-body mt-2 text-[0.9rem] lg:hidden">{info.spec ?? "Specification available in product PDF."}</p>
+                  </article>
                 );
               })}
-            </div>
+            </Stagger>
           </div>
-        </motion.section>
-      </div>
-    </div>
+        </section>
+      )}
+
+      {/* Next collection */}
+      <Link href={`/products/${next.slug}`} data-cursor="Next" className="group relative block overflow-hidden bg-charcoal text-ivory">
+        <Image
+          src={next.image}
+          alt=""
+          fill
+          sizes="100vw"
+          className="scale-110 object-cover opacity-30 transition-all duration-[1.4s] ease-luxury group-hover:scale-100 group-hover:opacity-55"
+        />
+        <div className="frame relative flex items-end justify-between gap-6 py-24 md:py-36">
+          <div>
+            <p className="t-small text-sand">Next collection</p>
+            <p className="t-display mt-6">{next.name}</p>
+          </div>
+          <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-ivory/40 transition-all duration-500 group-hover:bg-ivory group-hover:text-charcoal md:h-20 md:w-20">
+            <ArrowUpRight size={22} />
+          </span>
+        </div>
+      </Link>
+    </>
   );
 }
